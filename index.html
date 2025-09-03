@@ -1,0 +1,434 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>VoiceCV - Voice-Activated Resume Builder</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <!-- Skip Navigation Links -->
+    <a href="#main-content" class="sr-only focus:not-sr-only">Skip to main content</a>
+    
+    <!-- Header -->
+    <header class="app-header" role="banner">
+        <div class="container">
+            <div class="header-content">
+                <h1 class="logo">
+                    <span class="logo-icon" aria-hidden="true">🎤</span>
+                    VoiceCV
+                </h1>
+                <nav class="nav-menu" role="navigation" aria-label="Main navigation">
+                    <button class="btn btn--secondary" id="settingsBtn" aria-label="Settings">
+                        <span aria-hidden="true">⚙️</span> Settings
+                    </button>
+                    <button class="btn btn--secondary" id="languageBtn" aria-label="Language selection">
+                        <span aria-hidden="true">🌐</span> <span id="currentLanguage">English</span>
+                    </button>
+                </nav>
+            </div>
+        </div>
+    </header>
+
+    <!-- Main Content -->
+    <main id="main-content" class="main-content" role="main">
+        
+        <!-- Welcome Screen -->
+        <section id="welcomeScreen" class="screen active" aria-labelledby="welcome-title">
+            <div class="container">
+                <div class="welcome-content">
+                    <div class="hero-section">
+                        <h1 id="welcome-title">Welcome to VoiceCV</h1>
+                        <p class="hero-subtitle">Create professional resumes using your voice. Accessible, efficient, and ATS-friendly.</p>
+                        
+                        <div class="features-grid">
+                            <div class="feature-card">
+                                <span class="feature-icon" aria-hidden="true">🎙️</span>
+                                <h3>Voice-Powered</h3>
+                                <p>Dictate your resume content naturally</p>
+                            </div>
+                            <div class="feature-card">
+                                <span class="feature-icon" aria-hidden="true">♿</span>
+                                <h3>Fully Accessible</h3>
+                                <p>Designed for all users and abilities</p>
+                            </div>
+                            <div class="feature-card">
+                                <span class="feature-icon" aria-hidden="true">🌍</span>
+                                <h3>Multilingual</h3>
+                                <p>Support for multiple languages</p>
+                            </div>
+                        </div>
+
+                        <div class="accessibility-selection">
+                            <h2>Choose Your Experience</h2>
+                            <div class="accessibility-modes">
+                                <button class="accessibility-btn" data-mode="normal" aria-describedby="normal-desc">
+                                    <span class="mode-icon" aria-hidden="true">👤</span>
+                                    <span class="mode-name">Normal</span>
+                                    <span id="normal-desc" class="mode-desc">Standard interface with all features</span>
+                                </button>
+                                <button class="accessibility-btn" data-mode="deaf" aria-describedby="deaf-desc">
+                                    <span class="mode-icon" aria-hidden="true">👂</span>
+                                    <span class="mode-name">Deaf/Hard of Hearing</span>
+                                    <span id="deaf-desc" class="mode-desc">Visual feedback with text-based interactions</span>
+                                </button>
+                                <button class="accessibility-btn" data-mode="blind" aria-describedby="blind-desc">
+                                    <span class="mode-icon" aria-hidden="true">👁️</span>
+                                    <span class="mode-name">Blind/Low Vision</span>
+                                    <span id="blind-desc" class="mode-desc">Screen reader optimized with audio feedback</span>
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Auth Screen -->
+        <section id="authScreen" class="screen" aria-labelledby="auth-title">
+            <div class="container">
+                <div class="auth-content">
+                    <h1 id="auth-title">Sign In or Create Account</h1>
+                    
+                    <div class="auth-tabs">
+                        <button class="auth-tab active" data-tab="signin" aria-controls="signin-form">Sign In</button>
+                        <button class="auth-tab" data-tab="signup" aria-controls="signup-form">Create Account</button>
+                    </div>
+
+                    <form id="signin-form" class="auth-form active" role="form" aria-labelledby="signin-title">
+                        <h2 id="signin-title" class="sr-only">Sign In Form</h2>
+                        <div class="form-group">
+                            <label for="signin-email" class="form-label">Email Address</label>
+                            <input type="email" id="signin-email" name="email" class="form-control" required aria-describedby="signin-email-help">
+                            <small id="signin-email-help" class="form-help">Enter your registered email address</small>
+                        </div>
+                        <div class="form-group">
+                            <label for="signin-password" class="form-label">Password</label>
+                            <input type="password" id="signin-password" name="password" class="form-control" required>
+                        </div>
+                        <button type="submit" class="btn btn--primary btn--full-width">Sign In</button>
+                    </form>
+
+                    <form id="signup-form" class="auth-form" role="form" aria-labelledby="signup-title" style="display: none;">
+                        <h2 id="signup-title" class="sr-only">Create Account Form</h2>
+                        <div class="form-group">
+                            <label for="signup-name" class="form-label">Full Name</label>
+                            <input type="text" id="signup-name" name="name" class="form-control" required aria-describedby="signup-name-help">
+                            <small id="signup-name-help" class="form-help">Enter your full name</small>
+                        </div>
+                        <div class="form-group">
+                            <label for="signup-email" class="form-label">Email Address</label>
+                            <input type="email" id="signup-email" name="email" class="form-control" required aria-describedby="signup-email-help">
+                            <small id="signup-email-help" class="form-help">Enter a valid email address</small>
+                        </div>
+                        <div class="form-group">
+                            <label for="signup-password" class="form-label">Password</label>
+                            <input type="password" id="signup-password" name="password" class="form-control" required aria-describedby="signup-password-help">
+                            <small id="signup-password-help" class="form-help">Password must be at least 6 characters</small>
+                        </div>
+                        <button type="submit" class="btn btn--primary btn--full-width">Create Account</button>
+                    </form>
+                </div>
+            </div>
+        </section>
+
+        <!-- Template Selection Screen -->
+        <section id="templateScreen" class="screen" aria-labelledby="template-title">
+            <div class="container">
+                <div class="template-content">
+                    <h1 id="template-title">Choose Your Resume Template</h1>
+                    <p>Select a professional template that best suits your industry and role.</p>
+                    
+                    <div class="templates-grid" role="radiogroup" aria-labelledby="template-title">
+                        <div class="template-card" role="radio" aria-checked="false" tabindex="0" data-template="classic">
+                            <div class="template-preview">
+                                <div class="template-mock classic-mock">
+                                    <div class="mock-header"></div>
+                                    <div class="mock-content">
+                                        <div class="mock-line"></div>
+                                        <div class="mock-line short"></div>
+                                        <div class="mock-line"></div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="template-info">
+                                <h3>Classic Professional</h3>
+                                <p>Clean, traditional format perfect for corporate roles</p>
+                                <ul class="template-features">
+                                    <li>Single column</li>
+                                    <li>Traditional sections</li>
+                                    <li>Professional fonts</li>
+                                </ul>
+                            </div>
+                        </div>
+
+                        <div class="template-card" role="radio" aria-checked="false" tabindex="0" data-template="modern">
+                            <div class="template-preview">
+                                <div class="template-mock modern-mock">
+                                    <div class="mock-header-left"></div>
+                                    <div class="mock-sidebar"></div>
+                                    <div class="mock-content">
+                                        <div class="mock-line"></div>
+                                        <div class="mock-line"></div>
+                                        <div class="mock-line short"></div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="template-info">
+                                <h3>Modern Executive</h3>
+                                <p>Contemporary design with subtle accents for leadership roles</p>
+                                <ul class="template-features">
+                                    <li>Two column layout</li>
+                                    <li>Visual hierarchy</li>
+                                    <li>Modern typography</li>
+                                </ul>
+                            </div>
+                        </div>
+
+                        <div class="template-card" role="radio" aria-checked="false" tabindex="0" data-template="simple">
+                            <div class="template-preview">
+                                <div class="template-mock simple-mock">
+                                    <div class="mock-header-simple"></div>
+                                    <div class="mock-content">
+                                        <div class="mock-line full"></div>
+                                        <div class="mock-line full"></div>
+                                        <div class="mock-line full"></div>
+                                        <div class="mock-line medium"></div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="template-info">
+                                <h3>Simple ATS</h3>
+                                <p>Minimalist design optimized for applicant tracking systems</p>
+                                <ul class="template-features">
+                                    <li>ATS-friendly</li>
+                                    <li>Simple formatting</li>
+                                    <li>High readability</li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="template-actions">
+                        <button class="btn btn--primary" id="continueWithTemplate" disabled>Continue with Selected Template</button>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Voice Input Screen -->
+        <section id="voiceScreen" class="screen" aria-labelledby="voice-title">
+            <div class="container">
+                <div class="voice-content">
+                    <h1 id="voice-title">Build Your Resume</h1>
+                    
+                    <div class="progress-indicator" role="progressbar" aria-valuenow="1" aria-valuemin="0" aria-valuemax="5">
+                        <div class="progress-bar"></div>
+                        <div class="progress-text">
+                            <span id="currentStep">Contact Information</span> 
+                            <span id="stepCounter">(1 of 5)</span>
+                        </div>
+                    </div>
+
+                    <div class="section-content">
+                        <div class="section-header">
+                            <h2 id="sectionTitle">Contact Information</h2>
+                            <p id="sectionDescription">Provide your basic contact details</p>
+                        </div>
+
+                        <div class="input-method-selector">
+                            <button class="method-btn active" data-method="voice" aria-pressed="true">
+                                <span aria-hidden="true">🎤</span> Voice Input
+                            </button>
+                            <button class="method-btn" data-method="text" aria-pressed="false">
+                                <span aria-hidden="true">⌨️</span> Text Input
+                            </button>
+                        </div>
+
+                        <div class="voice-input-area">
+                            <div class="voice-recorder">
+                                <button class="record-btn" id="recordBtn" aria-label="Start recording">
+                                    <span class="record-icon" aria-hidden="true">🎤</span>
+                                    <span class="record-text">Click to Start Recording</span>
+                                </button>
+                                <div class="voice-status" id="voiceStatus" aria-live="polite"></div>
+                            </div>
+
+                            <div class="transcription-area">
+                                <label for="transcription" class="form-label">Transcription / Manual Input</label>
+                                <textarea id="transcription" class="form-control" rows="6" 
+                                    placeholder="Your speech will appear here, or you can type directly..." 
+                                    aria-describedby="transcription-help"></textarea>
+                                <small id="transcription-help" class="form-help">You can edit the transcribed text or type directly</small>
+                            </div>
+
+                            <div class="voice-controls">
+                                <button class="btn btn--secondary" id="clearBtn">Clear</button>
+                                <button class="btn btn--primary" id="confirmSectionBtn">Confirm Section</button>
+                            </div>
+                        </div>
+
+                        <div class="section-navigation">
+                            <button class="btn btn--outline" id="prevSectionBtn" disabled>Previous Section</button>
+                            <button class="btn btn--primary" id="nextSectionBtn">Next Section</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Review Screen -->
+        <section id="reviewScreen" class="screen" aria-labelledby="review-title">
+            <div class="container">
+                <div class="review-content">
+                    <h1 id="review-title">Review Your Resume</h1>
+                    <p>Review and edit your resume before final export</p>
+
+                    <div class="review-layout">
+                        <div class="resume-preview">
+                            <div class="preview-header">
+                                <h2>Resume Preview</h2>
+                                <button class="btn btn--secondary" id="editModeBtn">Edit Mode</button>
+                            </div>
+                            <div class="resume-content" id="resumePreview">
+                                <!-- Resume content will be dynamically generated -->
+                            </div>
+                        </div>
+
+                        <div class="review-actions">
+                            <h3>Export Options</h3>
+                            <div class="export-buttons">
+                                <button class="btn btn--primary" id="exportPdfBtn">
+                                    <span aria-hidden="true">📄</span> Export as PDF
+                                </button>
+                                <button class="btn btn--secondary" id="exportWordBtn">
+                                    <span aria-hidden="true">📝</span> Export as Word
+                                </button>
+                            </div>
+
+                            <h3>Additional Documents</h3>
+                            <div class="document-upload">
+                                <input type="file" id="documentUpload" class="sr-only" multiple 
+                                    accept=".pdf,.doc,.docx,.txt" aria-describedby="upload-help">
+                                <label for="documentUpload" class="btn btn--outline">
+                                    <span aria-hidden="true">📎</span> Upload Documents
+                                </label>
+                                <small id="upload-help" class="form-help">Upload cover letters, certificates, or other supporting documents</small>
+                            </div>
+
+                            <div class="uploaded-documents" id="uploadedDocuments">
+                                <!-- Uploaded documents will appear here -->
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Settings Modal -->
+        <div id="settingsModal" class="modal hidden" role="dialog" aria-labelledby="settings-modal-title" aria-hidden="true">
+            <div class="modal-backdrop"></div>
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h2 id="settings-modal-title">Settings</h2>
+                    <button class="modal-close" aria-label="Close settings">×</button>
+                </div>
+                <div class="modal-body">
+                    <div class="settings-section">
+                        <h3>Accessibility</h3>
+                        <div class="form-group">
+                            <label for="accessibilityMode" class="form-label">Accessibility Mode</label>
+                            <select id="accessibilityMode" class="form-control">
+                                <option value="normal">Normal</option>
+                                <option value="deaf">Deaf/Hard of Hearing</option>
+                                <option value="blind">Blind/Low Vision</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">
+                                <input type="checkbox" id="highContrast"> High Contrast Mode
+                            </label>
+                        </div>
+                    </div>
+
+                    <div class="settings-section">
+                        <h3>Voice Settings</h3>
+                        <div class="form-group">
+                            <label for="voiceLanguage" class="form-label">Voice Recognition Language</label>
+                            <select id="voiceLanguage" class="form-control">
+                                <option value="en-US">English (US)</option>
+                                <option value="en-GB">English (UK)</option>
+                                <option value="es-ES">Spanish</option>
+                                <option value="fr-FR">French</option>
+                                <option value="de-DE">German</option>
+                                <option value="hi-IN">Hindi</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <div class="settings-section">
+                        <h3>Account</h3>
+                        <div class="form-group">
+                            <button class="btn btn--outline" id="logoutBtn">Sign Out</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Language Selection Modal -->
+        <div id="languageModal" class="modal hidden" role="dialog" aria-labelledby="language-modal-title" aria-hidden="true">
+            <div class="modal-backdrop"></div>
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h2 id="language-modal-title">Select Language</h2>
+                    <button class="modal-close" aria-label="Close language selection">×</button>
+                </div>
+                <div class="modal-body">
+                    <div class="language-options">
+                        <div class="language-option" data-lang="en-US">
+                            <span class="language-flag" aria-hidden="true">🇺🇸</span>
+                            <span class="language-name">English (US)</span>
+                        </div>
+                        <div class="language-option" data-lang="en-GB">
+                            <span class="language-flag" aria-hidden="true">🇬🇧</span>
+                            <span class="language-name">English (UK)</span>
+                        </div>
+                        <div class="language-option" data-lang="es-ES">
+                            <span class="language-flag" aria-hidden="true">🇪🇸</span>
+                            <span class="language-name">Spanish</span>
+                        </div>
+                        <div class="language-option" data-lang="fr-FR">
+                            <span class="language-flag" aria-hidden="true">🇫🇷</span>
+                            <span class="language-name">French</span>
+                        </div>
+                        <div class="language-option" data-lang="de-DE">
+                            <span class="language-flag" aria-hidden="true">🇩🇪</span>
+                            <span class="language-name">German</span>
+                        </div>
+                        <div class="language-option" data-lang="hi-IN">
+                            <span class="language-flag" aria-hidden="true">🇮🇳</span>
+                            <span class="language-name">Hindi</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <!-- Status Messages -->
+    <div id="statusMessages" class="status-messages" aria-live="polite" aria-atomic="true">
+        <!-- Dynamic status messages will appear here -->
+    </div>
+
+    <!-- Loading Overlay -->
+    <div id="loadingOverlay" class="loading-overlay hidden" aria-hidden="true">
+        <div class="loading-spinner">
+            <div class="spinner"></div>
+            <p>Processing...</p>
+        </div>
+    </div>
+
+    <script src="app.js"></script>
+</body>
+</html>
