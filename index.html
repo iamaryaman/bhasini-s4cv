@@ -1,10 +1,510 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" data-theme="dark">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>VoiceCV - Voice-Activated Resume Builder</title>
+    <title>S4CV</title>
     <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="dark-theme.css">
+    <link rel="stylesheet" href="light-theme.css">
+    <style>
+        /* Override white backgrounds with dark theme */
+        body {
+            background: #0a0e27;
+            color: #f1f5f9;
+        }
+        
+        .feature-card {
+            background: #1a1d35 !important;
+            border: 1px solid rgba(148, 163, 184, 0.1) !important;
+            color: #f1f5f9 !important;
+        }
+        
+        .feature-card h3 {
+            color: #f1f5f9 !important;
+        }
+        
+        .feature-card p {
+            color: #94a3b8 !important;
+        }
+        
+        .hero-section {
+            background: transparent !important;
+        }
+        
+        .hero-subtitle {
+            color: #94a3b8 !important;
+        }
+        
+        .accessibility-btn {
+            background: #1a1d35 !important;
+            border: 2px solid rgba(148, 163, 184, 0.1) !important;
+            color: #f1f5f9 !important;
+        }
+        
+        .accessibility-btn:hover {
+            border-color: #6366f1 !important;
+            background: #252849 !important;
+        }
+        
+        .accessibility-btn.selected {
+            border-color: #6366f1 !important;
+            background: linear-gradient(135deg, rgba(99, 102, 241, 0.1) 0%, rgba(139, 92, 246, 0.1) 100%) !important;
+        }
+        
+        .mode-name {
+            color: #f1f5f9 !important;
+        }
+        
+        .mode-desc {
+            color: #94a3b8 !important;
+        }
+        
+        .template-card {
+            background: #1a1d35 !important;
+            border: 2px solid rgba(148, 163, 184, 0.1) !important;
+        }
+        
+        .template-preview {
+            background: #252849 !important;
+        }
+        
+        .template-mock {
+            background: #1e2139 !important;
+        }
+        
+        .template-info h3 {
+            color: #f1f5f9 !important;
+        }
+        
+        .template-info p {
+            color: #94a3b8 !important;
+        }
+        
+        .template-features li {
+            color: #94a3b8 !important;
+        }
+        
+        .section-content {
+            background: #1a1d35 !important;
+            border: 1px solid rgba(148, 163, 184, 0.1) !important;
+        }
+        
+        .auth-content {
+            background: #1a1d35;
+            padding: 2rem;
+            border-radius: 12px;
+            border: 1px solid rgba(148, 163, 184, 0.1);
+        }
+        
+        .auth-tab {
+            background: transparent !important;
+            color: #94a3b8 !important;
+        }
+        
+        .auth-tab.active {
+            color: #6366f1 !important;
+            border-bottom-color: #6366f1 !important;
+        }
+        
+        .form-control {
+            background: #1e2139 !important;
+            border: 1px solid rgba(148, 163, 184, 0.1) !important;
+            color: #f1f5f9 !important;
+        }
+        
+        .form-control:focus {
+            border-color: #6366f1 !important;
+            background: #252849 !important;
+        }
+        
+        .form-label {
+            color: #94a3b8 !important;
+        }
+        
+        .form-help {
+            color: #64748b !important;
+        }
+        
+        input::placeholder,
+        textarea::placeholder {
+            color: #475569 !important;
+        }
+        
+        /* Single Input CV Builder Styles */
+        .single-voice-content {
+            max-width: 1000px;
+            margin: 0 auto;
+            padding: 2rem 1rem;
+        }
+        
+        .auto-detect-toggle {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        
+        .toggle-switch {
+            width: 48px;
+            height: 24px;
+            background: #1e2139;
+            border-radius: 12px;
+            position: relative;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+        
+        .toggle-switch.active {
+            background: #6366f1;
+        }
+        
+        .toggle-switch::after {
+            content: '';
+            position: absolute;
+            width: 20px;
+            height: 20px;
+            border-radius: 50%;
+            background: white;
+            top: 2px;
+            left: 2px;
+            transition: all 0.3s ease;
+        }
+        
+        .toggle-switch.active::after {
+            left: 26px;
+        }
+        
+        .language-indicator-compact {
+            background: #6366f1;
+            color: white;
+            padding: 0.5rem 1rem;
+            border-radius: 12px;
+            font-size: 0.875rem;
+            font-weight: 500;
+        }
+        
+        .record-btn-large {
+            background: linear-gradient(135deg, #6366f1, #8b5cf6);
+            border: none;
+            padding: 2rem 3rem;
+            border-radius: 16px;
+            color: white;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 8px 25px rgba(99, 102, 241, 0.3);
+            width: auto;
+        }
+        
+        .record-btn-large:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 12px 35px rgba(99, 102, 241, 0.4);
+        }
+        
+        .record-btn-large.recording {
+            background: linear-gradient(135deg, #ef4444, #dc2626);
+            animation: pulse-recording 2s infinite;
+        }
+        
+        @keyframes pulse-recording {
+            0%, 100% { opacity: 1; transform: scale(1); }
+            50% { opacity: 0.8; transform: scale(1.02); }
+        }
+        
+        .waveform-visualizer-compact {
+            height: 40px;
+            background: #1e2139;
+            border-radius: 8px;
+            margin-bottom: 1rem;
+            border: 1px solid rgba(148, 163, 184, 0.1);
+        }
+        
+        .transcription-display {
+            min-height: 200px;
+            background: #1e2139;
+            border: 2px solid rgba(148, 163, 184, 0.2);
+            border-radius: 12px;
+            padding: 1.5rem;
+            margin-bottom: 2rem;
+            position: relative;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+        
+        .transcription-text {
+            line-height: 1.8;
+            font-size: 1.1rem;
+            min-height: 150px;
+        }
+        
+        .transcription-partial {
+            color: #94a3b8;
+            font-style: italic;
+        }
+        
+        .transcription-final {
+            color: #f1f5f9;
+            font-weight: 500;
+        }
+        
+        .action-controls {
+            border-top: 1px solid rgba(148, 163, 184, 0.1);
+            padding-top: 2rem;
+        }
+        
+        .btn-lg {
+            padding: 1rem 2rem;
+            font-size: 1.1rem;
+        }
+        
+        .voice-recorder {
+            background: transparent;
+        }
+        
+        .record-btn {
+            background: linear-gradient(135deg, #0a0e27 0%, #1e2139 100%) !important;
+            border: 3px solid #6366f1 !important;
+            color: #f1f5f9 !important;
+        }
+        
+        .record-btn:hover {
+            background: linear-gradient(135deg, #1e2139 0%, #252849 100%) !important;
+        }
+        
+        .record-btn.recording {
+            background: linear-gradient(135deg, #ef4444 0%, #dc2626 100%) !important;
+            border-color: #ef4444 !important;
+        }
+        
+        .voice-status {
+            color: #94a3b8 !important;
+        }
+        
+        .transcription-area textarea {
+            background: #1e2139 !important;
+            border: 1px solid rgba(148, 163, 184, 0.1) !important;
+            color: #f1f5f9 !important;
+        }
+        
+        .progress-indicator {
+            background: #1a1d35 !important;
+            border: 1px solid rgba(148, 163, 184, 0.1) !important;
+        }
+        
+        .progress-bar {
+            background: #1e2139 !important;
+        }
+        
+        .progress-bar::after {
+            background: linear-gradient(90deg, #6366f1 0%, #8b5cf6 100%) !important;
+        }
+        
+        .progress-text {
+            color: #f1f5f9 !important;
+        }
+        
+        #stepCounter {
+            color: #94a3b8 !important;
+        }
+        
+        .section-header h2 {
+            color: #f1f5f9 !important;
+        }
+        
+        .section-header p {
+            color: #94a3b8 !important;
+        }
+        
+        .method-btn {
+            background: #1e2139 !important;
+            border: 1px solid rgba(148, 163, 184, 0.1) !important;
+            color: #94a3b8 !important;
+        }
+        
+        .method-btn.active {
+            background: #6366f1 !important;
+            color: white !important;
+            border-color: #6366f1 !important;
+        }
+        
+        .resume-preview {
+            background: #1a1d35 !important;
+            border: 1px solid rgba(148, 163, 184, 0.1) !important;
+        }
+        
+        .resume-content {
+            background: #1e2139 !important;
+            color: #f1f5f9 !important;
+        }
+        
+        .resume-section h3 {
+            color: #f1f5f9 !important;
+            border-bottom-color: rgba(148, 163, 184, 0.1) !important;
+        }
+        
+        .review-actions {
+            background: #1a1d35 !important;
+            border: 1px solid rgba(148, 163, 184, 0.1) !important;
+        }
+        
+        .review-actions h3 {
+            color: #f1f5f9 !important;
+        }
+        
+        .modal-content {
+            background: #151935 !important;
+            border: 1px solid rgba(148, 163, 184, 0.1) !important;
+        }
+        
+        .modal-header {
+            border-bottom: 1px solid rgba(148, 163, 184, 0.1) !important;
+        }
+        
+        .modal-header h2 {
+            color: #f1f5f9 !important;
+        }
+        
+        .modal-close {
+            background: #252849 !important;
+            color: #94a3b8 !important;
+            border: none !important;
+        }
+        
+        .modal-close:hover {
+            background: #ef4444 !important;
+            color: white !important;
+        }
+        
+        .settings-section h3 {
+            color: #f1f5f9 !important;
+        }
+        
+        .language-option {
+            color: #f1f5f9 !important;
+        }
+        
+        .language-option:hover {
+            background: rgba(99, 102, 241, 0.1) !important;
+        }
+        
+        .language-option.selected {
+            background: linear-gradient(135deg, rgba(99, 102, 241, 0.1) 0%, rgba(139, 92, 246, 0.1) 100%) !important;
+            border: 1px solid #6366f1 !important;
+        }
+        
+        .document-item {
+            background: #1e2139 !important;
+            color: #f1f5f9 !important;
+        }
+        
+        .status-messages {
+            z-index: 10000;
+        }
+        
+        .status-message {
+            background: #1a1d35 !important;
+            border: 1px solid rgba(148, 163, 184, 0.1) !important;
+            color: #f1f5f9 !important;
+            backdrop-filter: blur(10px);
+        }
+        
+        .status-message.success {
+            border-color: #10b981 !important;
+            background: rgba(16, 185, 129, 0.1) !important;
+            color: #10b981 !important;
+        }
+        
+        .status-message.error {
+            border-color: #ef4444 !important;
+            background: rgba(239, 68, 68, 0.1) !important;
+            color: #ef4444 !important;
+        }
+        
+        .status-message.info {
+            border-color: #3b82f6 !important;
+            background: rgba(59, 130, 246, 0.1) !important;
+            color: #3b82f6 !important;
+        }
+        
+        .loading-overlay {
+            background-color: rgba(10, 14, 39, 0.9) !important;
+        }
+        
+        .loading-spinner p {
+            color: #f1f5f9 !important;
+        }
+        
+        .spinner {
+            border: 4px solid #1e2139 !important;
+            border-top-color: #6366f1 !important;
+        }
+        
+        /* Button Styles */
+        .btn {
+            transition: all 0.3s ease;
+        }
+        
+        .btn--primary {
+            background: linear-gradient(135deg, #6366f1 0%, #8b5cf6 100%) !important;
+            color: white !important;
+            border: none !important;
+        }
+        
+        .btn--primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 24px rgba(99, 102, 241, 0.4);
+        }
+        
+        .btn--secondary {
+            background: #1e2139 !important;
+            color: #f1f5f9 !important;
+            border: 1px solid rgba(148, 163, 184, 0.1) !important;
+        }
+        
+        .btn--secondary:hover {
+            background: #252849 !important;
+            border-color: #6366f1 !important;
+        }
+        
+        .btn--outline {
+            background: transparent !important;
+            color: #f1f5f9 !important;
+            border: 1px solid rgba(148, 163, 184, 0.1) !important;
+        }
+        
+        .btn--outline:hover {
+            background: rgba(99, 102, 241, 0.1) !important;
+            border-color: #6366f1 !important;
+        }
+        
+        /* App Header */
+        .app-header {
+            background: #151935 !important;
+            border-bottom: 1px solid rgba(148, 163, 184, 0.1) !important;
+        }
+        
+        h1, h2, h3, h4, h5, h6 {
+            color: #f1f5f9 !important;
+        }
+        
+        p {
+            color: #94a3b8;
+        }
+        
+        /* Accessibility improvements */
+        .screen {
+            background: transparent;
+        }
+        
+        /* Feature icons with better visibility */
+        .feature-icon {
+            filter: brightness(1.2);
+        }
+        
+        /* Modal backdrop */
+        .modal-backdrop {
+            background-color: rgba(10, 14, 39, 0.8) !important;
+            backdrop-filter: blur(5px);
+        }
+    </style>
 </head>
 <body>
     <!-- Skip Navigation Links -->
@@ -15,15 +515,16 @@
         <div class="container">
             <div class="header-content">
                 <h1 class="logo">
-                    <span class="logo-icon" aria-hidden="true">🎤</span>
-                    VoiceCV
+                    <span class="logo-icon" aria-hidden="true"></span>
+                    <img class="logo-image" src="images/LOGO.png" >
+                    <span id="logo-text">S4CV</span>
                 </h1>
                 <nav class="nav-menu" role="navigation" aria-label="Main navigation">
                     <button class="btn btn--secondary" id="settingsBtn" aria-label="Settings">
-                        <span aria-hidden="true">⚙️</span> Settings
+                        <span aria-hidden="true">⚙️</span> <span data-translate="settingsTitle">Settings</span>
                     </button>
                     <button class="btn btn--secondary" id="languageBtn" aria-label="Language selection">
-                        <span aria-hidden="true">🌐</span> <span id="currentLanguage">English</span>
+                        <span aria-hidden="true">🌐</span> <span id="currentLanguage" data-translate="english">English</span>
                     </button>
                 </nav>
             </div>
@@ -38,8 +539,8 @@
             <div class="container">
                 <div class="welcome-content">
                     <div class="hero-section">
-                        <h1 id="welcome-title">Welcome to VoiceCV</h1>
-                        <p class="hero-subtitle">Create professional resumes using your voice. Accessible, efficient, and ATS-friendly.</p>
+                        <h1 id="welcome-title" data-translate="welcomeTitle">Welcome to S4CV</h1>
+                        <p class="hero-subtitle" data-translate="welcomeSubtitle">Create professional resumes using your voice. Accessible, efficient, and ATS-friendly.</p>
                         
                         <div class="features-grid">
                             <div class="feature-card">
@@ -60,22 +561,22 @@
                         </div>
 
                         <div class="accessibility-selection">
-                            <h2>Choose Your Experience</h2>
+                            <h2 data-translate="selectAccessibilityMode">Choose Your Experience</h2>
                             <div class="accessibility-modes">
                                 <button class="accessibility-btn" data-mode="normal" aria-describedby="normal-desc">
                                     <span class="mode-icon" aria-hidden="true">👤</span>
-                                    <span class="mode-name">Normal</span>
-                                    <span id="normal-desc" class="mode-desc">Standard interface with all features</span>
+                                    <span class="mode-name" data-translate="normalMode">Normal</span>
+                                    <span id="normal-desc" class="mode-desc" data-translate="normalModeDesc">Standard interface with all features</span>
                                 </button>
                                 <button class="accessibility-btn" data-mode="deaf" aria-describedby="deaf-desc">
                                     <span class="mode-icon" aria-hidden="true">👂</span>
-                                    <span class="mode-name">Deaf/Hard of Hearing</span>
-                                    <span id="deaf-desc" class="mode-desc">Visual feedback with text-based interactions</span>
+                                    <span class="mode-name" data-translate="deafMode">Deaf/Hard of Hearing</span>
+                                    <span id="deaf-desc" class="mode-desc" data-translate="deafModeDesc">Visual feedback with text-based interactions</span>
                                 </button>
                                 <button class="accessibility-btn" data-mode="blind" aria-describedby="blind-desc">
                                     <span class="mode-icon" aria-hidden="true">👁️</span>
-                                    <span class="mode-name">Blind/Low Vision</span>
-                                    <span id="blind-desc" class="mode-desc">Screen reader optimized with audio feedback</span>
+                                    <span class="mode-name" data-translate="blindMode">Blind/Low Vision</span>
+                                    <span id="blind-desc" class="mode-desc" data-translate="blindModeDesc">Screen reader optimized with audio feedback</span>
                                 </button>
                             </div>
                         </div>
@@ -91,42 +592,42 @@
                     <h1 id="auth-title">Sign In or Create Account</h1>
                     
                     <div class="auth-tabs">
-                        <button class="auth-tab active" data-tab="signin" aria-controls="signin-form">Sign In</button>
-                        <button class="auth-tab" data-tab="signup" aria-controls="signup-form">Create Account</button>
+                        <button class="auth-tab active" data-tab="signin" aria-controls="signin-form" data-translate="signIn">Sign In</button>
+                        <button class="auth-tab" data-tab="signup" aria-controls="signup-form" data-translate="signUp">Create Account</button>
                     </div>
 
                     <form id="signin-form" class="auth-form active" role="form" aria-labelledby="signin-title">
                         <h2 id="signin-title" class="sr-only">Sign In Form</h2>
                         <div class="form-group">
-                            <label for="signin-email" class="form-label">Email Address</label>
+                            <label for="signin-email" class="form-label" data-translate="emailAddress">Email Address</label>
                             <input type="email" id="signin-email" name="email" class="form-control" required aria-describedby="signin-email-help">
                             <small id="signin-email-help" class="form-help">Enter your registered email address</small>
                         </div>
                         <div class="form-group">
-                            <label for="signin-password" class="form-label">Password</label>
+                            <label for="signin-password" class="form-label" data-translate="password">Password</label>
                             <input type="password" id="signin-password" name="password" class="form-control" required>
                         </div>
-                        <button type="submit" class="btn btn--primary btn--full-width">Sign In</button>
+                        <button type="submit" class="btn btn--primary btn--full-width" data-translate="signIn">Sign In</button>
                     </form>
 
                     <form id="signup-form" class="auth-form" role="form" aria-labelledby="signup-title" style="display: none;">
                         <h2 id="signup-title" class="sr-only">Create Account Form</h2>
                         <div class="form-group">
-                            <label for="signup-name" class="form-label">Full Name</label>
+                            <label for="signup-name" class="form-label" data-translate="fullName">Full Name</label>
                             <input type="text" id="signup-name" name="name" class="form-control" required aria-describedby="signup-name-help">
                             <small id="signup-name-help" class="form-help">Enter your full name</small>
                         </div>
                         <div class="form-group">
-                            <label for="signup-email" class="form-label">Email Address</label>
+                            <label for="signup-email" class="form-label" data-translate="emailAddress">Email Address</label>
                             <input type="email" id="signup-email" name="email" class="form-control" required aria-describedby="signup-email-help">
                             <small id="signup-email-help" class="form-help">Enter a valid email address</small>
                         </div>
                         <div class="form-group">
-                            <label for="signup-password" class="form-label">Password</label>
+                            <label for="signup-password" class="form-label" data-translate="password">Password</label>
                             <input type="password" id="signup-password" name="password" class="form-control" required aria-describedby="signup-password-help">
                             <small id="signup-password-help" class="form-help">Password must be at least 6 characters</small>
                         </div>
-                        <button type="submit" class="btn btn--primary btn--full-width">Create Account</button>
+                        <button type="submit" class="btn btn--primary btn--full-width" data-translate="signUp">Create Account</button>
                     </form>
                 </div>
             </div>
@@ -216,61 +717,217 @@
             </div>
         </section>
 
-        <!-- Voice Input Screen -->
+        <!-- Single Voice Input Screen -->
         <section id="voiceScreen" class="screen" aria-labelledby="voice-title">
             <div class="container">
-                <div class="voice-content">
-                    <h1 id="voice-title">Build Your Resume</h1>
-                    
-                    <div class="progress-indicator" role="progressbar" aria-valuenow="1" aria-valuemin="0" aria-valuemax="5">
-                        <div class="progress-bar"></div>
-                        <div class="progress-text">
-                            <span id="currentStep">Contact Information</span> 
-                            <span id="stepCounter">(1 of 5)</span>
+                <div class="single-voice-content">
+                    <div class="text-center mb-4">
+                        <h1 id="voice-title" class="text-primary mb-2">🎤 Single Voice Input CV Builder</h1>
+                        <div style="background: linear-gradient(135deg, rgba(239, 68, 68, 0.1), rgba(99, 102, 241, 0.1)); border: 2px solid rgba(99, 102, 241, 0.4); border-radius: 12px; padding: 20px; max-width: 900px; margin: 0 auto 20px;">
+                            <p class="text-primary mb-3" style="font-size: 1.1rem; font-weight: 600;">⚡ ONE RECORDING SESSION - ALL CV INFORMATION</p>
+                            <p class="text-secondary mb-3">No multiple inputs! Just press record and speak continuously about your entire professional background. The AI will extract and organize everything automatically.</p>
+                            
+                            <div style="background: rgba(255, 255, 255, 0.05); border-radius: 8px; padding: 15px; margin: 15px 0;">
+                                <p class="text-primary" style="font-size: 0.95rem; margin-bottom: 12px;"><strong>🗣️ Speak about ALL of these in ONE go:</strong></p>
+                                <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 8px; font-size: 0.85rem; color: var(--text-secondary);">
+                                    <div style="display: flex; align-items: center; gap: 8px;"><span>📝</span> Your full name & contact details</div>
+                                    <div style="display: flex; align-items: center; gap: 8px;"><span>💼</span> All work experience & companies</div>
+                                    <div style="display: flex; align-items: center; gap: 8px;"><span>🎓</span> Complete education history</div>
+                                    <div style="display: flex; align-items: center; gap: 8px;"><span>🔧</span> All technical & soft skills</div>
+                                    <div style="display: flex; align-items: center; gap: 8px;"><span>🌍</span> Languages you speak fluently</div>
+                                    <div style="display: flex; align-items: center; gap: 8px;"><span>📍</span> Location & other details</div>
+                                </div>
+                            </div>
+                            
+                            <div style="background: rgba(16, 185, 129, 0.1); border-left: 4px solid #10b981; padding: 12px 15px; border-radius: 6px;">
+                                <p style="font-size: 0.85rem; margin: 0; color: var(--text-secondary); font-style: italic;">
+                                    🤖 <strong>AI Processing:</strong> The system will automatically parse your speech and organize it into proper CV sections with appropriate headings.
+                                </p>
+                            </div>
                         </div>
                     </div>
-
-                    <div class="section-content">
-                        <div class="section-header">
-                            <h2 id="sectionTitle">Contact Information</h2>
-                            <p id="sectionDescription">Provide your basic contact details</p>
+                    
+                    <!-- Language Auto-Detection -->
+                    <div class="mb-4" id="languageSection">
+                        <div class="flex items-center justify-center mb-3">
+                            <div class="auto-detect-toggle mr-4">
+                                <div class="toggle-switch active" id="autoDetectToggle"></div>
+                                <label>Auto-detect language</label>
+                            </div>
+                            <div class="language-indicator-compact" id="currentLangIndicator">Auto-detect enabled</div>
                         </div>
-
-                        <div class="input-method-selector">
-                            <button class="method-btn active" data-method="voice" aria-pressed="true">
-                                <span aria-hidden="true">🎤</span> Voice Input
-                            </button>
-                            <button class="method-btn" data-method="text" aria-pressed="false">
-                                <span aria-hidden="true">⌨️</span> Text Input
-                            </button>
+                        
+                        <!-- Microphone Status -->
+                        <div class="microphone-status" id="microphoneStatus" style="text-align: center; margin-top: 15px;">
+                            <div class="mic-status-indicator" id="micStatusIndicator" style="display: inline-flex; align-items: center; gap: 8px; padding: 8px 16px; border-radius: 20px; background: rgba(156, 163, 175, 0.1); color: #9ca3af; font-size: 0.875rem;">
+                                <span>🎤</span>
+                                <span id="micStatusText">Click record to check microphone</span>
+                            </div>
                         </div>
-
-                        <div class="voice-input-area">
-                            <div class="voice-recorder">
-                                <button class="record-btn" id="recordBtn" aria-label="Start recording">
-                                    <span class="record-icon" aria-hidden="true">🎤</span>
-                                    <span class="record-text">Click to Start Recording</span>
+                    </div>
+                    
+                    <!-- Input Mode Toggle and Test Button -->
+                    <div style="text-align: center; margin: 2rem 0;">
+                        <button id="inputModeToggle" class="btn btn--outline" style="margin: 0.5rem;">
+                            📝 Switch to Text Input
+                        </button>
+                        <button id="testBhashiniBtn" class="btn btn--secondary" style="margin: 0.5rem;">
+                            🔍 Test Bhashini Service
+                        </button>
+                    </div>
+                    
+                    <!-- Voice Input Mode -->
+                    <div id="voiceMode">
+                    <!-- Single Recording Section -->
+                    <div class="text-center mb-4">
+                        <div style="background: rgba(99, 102, 241, 0.05); border: 2px dashed rgba(99, 102, 241, 0.3); border-radius: 16px; padding: 25px; margin: 20px 0;">
+                            <p style="font-size: 0.9rem; color: var(--text-primary); margin-bottom: 15px; font-weight: 500;">
+                                🔊 <strong>SINGLE SPEECH INPUT:</strong> Speak continuously about your entire professional background
+                            </p>
+                            <button class="record-btn-large" id="recordBtn" aria-label="Start complete CV recording">
+                                <span style="font-size: 3.5rem;">🎤</span>
+                                <div style="font-size: 1.2rem; margin-top: 10px; font-weight: 700;">START COMPLETE CV RECORDING</div>
+                                <div style="font-size: 0.85rem; opacity: 0.85; margin-top: 6px; line-height: 1.4;">One continuous session • All CV information • AI auto-extracts everything</div>
+                            </button>
+                            <p style="font-size: 0.8rem; color: var(--text-tertiary); margin-top: 15px; font-style: italic;">
+                                ⚠️ No need to pause or separate topics - just speak naturally about everything!
+                            </p>
+                        </div>
+                    </div>
+                    
+                    <!-- Waveform and Status -->
+                    <div class="recording-status mb-4">
+                        <div class="waveform-visualizer-compact">
+                            <canvas id="waveformCanvas" width="0" height="0"></canvas>
+                        </div>
+                        <div class="recording-tips" id="recordingTips" style="display: none;">
+                            <div class="text-secondary" style="font-size: 0.9rem; text-align: center; padding: 20px; background: rgba(239, 68, 68, 0.1); border-radius: 12px; border: 2px solid rgba(239, 68, 68, 0.2);">
+                                🔴 <strong>RECORDING SINGLE CV SESSION...</strong><br>
+                                <div style="margin-top: 12px; font-size: 0.85rem; line-height: 1.5; color: var(--text-primary);">
+                                    🔊 <strong>Speak continuously</strong> - don't pause between topics!<br>
+                                    📝 Include ALL: name, contact, experience, education, skills, languages<br>
+                                    🤖 <em>The AI is listening and will organize everything automatically into proper CV sections</em>
+                                </div>
+                                <div style="margin-top: 10px; padding: 8px 12px; background: rgba(255, 255, 255, 0.1); border-radius: 6px; font-size: 0.75rem;">
+                                    ⚡ TIP: Treat this like introducing yourself comprehensively to someone
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Large Transcription Display -->
+                    <div style="margin: 3rem 0;">
+                        <div style="background: linear-gradient(135deg, rgba(99, 102, 241, 0.1) 0%, rgba(139, 92, 246, 0.1) 100%); border: 2px solid rgba(99, 102, 241, 0.3); border-radius: 16px; padding: 2rem; margin: 2rem 0;">
+                            <h1 style="color: #6366f1; margin-bottom: 1.5rem; display: flex; align-items: center; gap: 12px; font-size: 1.8rem; text-align: center; justify-content: center;" data-translate="singleVoiceInputCVBuilder">
+                                <span>🎤</span> Single Complete CV Input
+                            </h1>
+                            
+                            <div style="background: #1a1d35; border: 3px solid rgba(99, 102, 241, 0.4); border-radius: 12px; min-height: 300px; padding: 2rem; position: relative; box-shadow: 0 8px 25px rgba(99, 102, 241, 0.2);">
+                                <div id="transcriptionText" style="font-size: 1.2rem; line-height: 1.8; color: #f1f5f9; min-height: 250px;">
+                                    <span id="finalText" style="color: #f1f5f9; font-weight: 500;"></span>
+                                    <span id="partialText" style="color: #94a3b8; font-style: italic;"></span>
+                                    
+                                        <div style="font-size: 1.4rem; margin-bottom: 2rem; color: #6366f1; font-weight: 600;">
+                                            🎤 Your speech will appear here in real-time
+                                        </div>
+                                        
+                                        <div style="background: rgba(99, 102, 241, 0.05); border-radius: 12px; padding: 2rem; margin-bottom: 2rem;">
+                                            <div style="font-size: 1.1rem; margin-bottom: 1rem; color: #6366f1; font-weight: 600;">
+                                                🗣️ Example of complete CV speech:
+                                            </div>
+                                            <div style="font-size: 1rem; line-height: 1.7; color: #94a3b8; font-style: normal;">
+                                                "My name is John Smith, email john.smith@gmail.com, phone +1-555-123-4567. I live in New York, USA. I currently work as a Senior Software Engineer at TechCorp for 4 years. Before that, I was a Junior Developer at StartupXYZ for 2 years. I have full-stack development experience. I completed my Bachelor of Computer Science from MIT in 2015. My skills include JavaScript, Python, React, Node.js, MongoDB. I'm fluent in English and Spanish."
+                                            </div>
+                                        </div>
+                                        
+                                        <div style="color: #10b981; font-size: 1rem; font-weight: 500;">
+                                            ✨ The system will automatically extract and organize all information into proper CV sections!
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    </div>
+                    
+                    <!-- Text Input Mode -->
+                    <div id="textMode" style="display: none;">
+                        <div style="background: rgba(99, 102, 241, 0.05); border: 2px dashed rgba(99, 102, 241, 0.3); border-radius: 16px; padding: 25px; margin: 20px 0;">
+                            <h3 style="color: #f1f5f9; margin-bottom: 1rem; text-align: center;">
+                                📝 Manual Text Input - Enter Your Complete CV Information
+                            </h3>
+                            <p style="text-align: center; margin-bottom: 1.5rem; color: var(--text-secondary);">
+                                Type or paste your complete CV information including personal details, work experience, education, skills, and languages.
+                            </p>
+                            
+                            <textarea 
+                                id="manualTextInput" 
+                                placeholder="Example: My name is John Smith and my email is john.smith@gmail.com. My phone number is +1-555-123-4567. I live in New York, USA. I currently work as a Senior Software Engineer at TechCorp for the past 4 years. Before that, I was a Junior Developer at StartupXYZ for 2 years. I have experience in full-stack development. I completed my Bachelor of Computer Science from MIT University in 2015. My technical skills include JavaScript, Python, React, Node.js, and MongoDB. I'm fluent in English and Spanish."
+                                style="width: 100%; min-height: 200px; padding: 15px; border-radius: 8px; border: 2px solid rgba(148, 163, 184, 0.2); background: #1e2139; color: #f1f5f9; font-size: 1rem; line-height: 1.6; resize: vertical;"
+                            ></textarea>
+                            
+                            <div style="text-align: center; margin-top: 1rem;">
+                                <button id="processTextBtn" class="btn btn--primary" disabled>
+                                    ✨ Process Text & Generate CV
                                 </button>
-                                <div class="voice-status" id="voiceStatus" aria-live="polite"></div>
-                            </div>
-
-                            <div class="transcription-area">
-                                <label for="transcription" class="form-label">Transcription / Manual Input</label>
-                                <textarea id="transcription" class="form-control" rows="6" 
-                                    placeholder="Your speech will appear here, or you can type directly..." 
-                                    aria-describedby="transcription-help"></textarea>
-                                <small id="transcription-help" class="form-help">You can edit the transcribed text or type directly</small>
-                            </div>
-
-                            <div class="voice-controls">
-                                <button class="btn btn--secondary" id="clearBtn">Clear</button>
-                                <button class="btn btn--primary" id="confirmSectionBtn">Confirm Section</button>
                             </div>
                         </div>
-
-                        <div class="section-navigation">
-                            <button class="btn btn--outline" id="prevSectionBtn" disabled>Previous Section</button>
-                            <button class="btn btn--primary" id="nextSectionBtn">Next Section</button>
+                    </div>
+                    
+                    <!-- Action Controls -->
+                    <div class="action-controls" id="actionControls" style="display: none;">
+                        <div class="text-center mb-3">
+                        <button class="btn btn-primary btn-lg" id="generateCVBtn">
+                            <span>✨</span> <span data-translate="generateMyCV">Generate My CV</span>
+                        </button>
+                        </div>
+                        <div class="flex justify-center gap-3">
+                            <button class="btn btn-secondary" id="clearBtn">
+                                <span>🗑️</span> <span data-translate="startOver">Start Over</span>
+                            </button>
+                            <button class="btn btn-secondary" id="copyBtn">
+                                <span>📋</span> <span data-translate="copyText">Copy Text</span>
+                            </button>
+                        </div>
+                    </div>
+                    
+                    <!-- Resume Preview -->
+                    <div class="resume-preview" id="resumePreview" style="display: none;">
+                        <div style="border-top: 2px solid var(--accent-primary); padding-top: 2rem; margin-top: 2rem;">
+                        <h2 class="text-primary mb-3 text-center" data-translate="resumePreview">📄 Resume Preview</h2>
+                            <div class="preview-content" id="previewContent" style="background: var(--dark-bg-tertiary); border: 1px solid var(--border-primary); border-radius: var(--radius-md); padding: 2rem; max-height: 400px; overflow-y: auto;">
+                                <!-- Preview content will be populated here -->
+                            </div>
+                            <div class="text-center mt-3">
+                                <div style="display: flex; gap: 1rem; justify-content: center; flex-wrap: wrap;">
+                                    <button class="btn btn--primary" onclick="app.exportResume('pdf')">
+                                        <span>📄</span> <span data-translate="exportAsPDF">Export as PDF</span>
+                                    </button>
+                                    <button class="btn btn--secondary" onclick="app.exportResume('word')">
+                                        <span>📝</span> <span data-translate="exportAsWord">Export as Word</span>
+                                    </button>
+                                </div>
+                                
+                                <!-- Document Upload Section -->
+                                <div style="margin-top: 2rem; padding: 1.5rem; background: rgba(99, 102, 241, 0.05); border-radius: 12px; border: 2px dashed rgba(99, 102, 241, 0.3);">
+                                    <h3 style="color: #f1f5f9; margin-bottom: 1rem; font-size: 1.1rem;" data-translate="additionalDocuments">📎 Additional Documents</h3>
+                                    <p style="color: var(--text-secondary); margin-bottom: 1rem; font-size: 0.9rem;" data-translate="uploadDocumentsHint">
+                                        Upload supporting documents like recommendations, marksheets, certificates to attach to your CV export
+                                    </p>
+                                    <input type="file" id="additionalDocsUpload" class="sr-only" multiple 
+                                        accept=".pdf,.doc,.docx,.jpg,.jpeg,.png" aria-describedby="upload-help">
+                                    <label for="additionalDocsUpload" class="btn btn--outline" style="cursor: pointer;">
+                                        <span aria-hidden="true">📎</span> <span data-translate="uploadFiles">Upload Files</span>
+                                    </label>
+                                    <small id="upload-help" class="form-help" style="display: block; margin-top: 0.5rem; color: var(--text-secondary);" data-translate="uploadHelp">
+                                        Accepted: PDF, Word, Images • Max 10MB per file
+                                    </small>
+                                    
+                                    <div id="uploadedDocumentsList" style="margin-top: 1rem;">
+                                        <!-- Uploaded documents will appear here -->
+                                    </div>
+                                </div>
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -335,6 +992,21 @@
                 </div>
                 <div class="modal-body">
                     <div class="settings-section">
+                        <h3>Appearance</h3>
+                        <div class="form-group">
+                            <label class="form-label">Theme Mode</label>
+                            <div style="display: flex; gap: 10px; margin-top: 10px;">
+                                <button onclick="app.setTheme('light')" id="lightThemeBtn" class="btn btn--outline" style="flex: 1;">
+                                    ☀️ Light
+                                </button>
+                                <button onclick="app.setTheme('dark')" id="darkThemeBtn" class="btn btn--outline" style="flex: 1;">
+                                    🌙 Dark
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="settings-section">
                         <h3>Accessibility</h3>
                         <div class="form-group">
                             <label for="accessibilityMode" class="form-label">Accessibility Mode</label>
@@ -354,22 +1026,39 @@
                     <div class="settings-section">
                         <h3>Voice Settings</h3>
                         <div class="form-group">
-                            <label for="voiceLanguage" class="form-label">Voice Recognition Language</label>
+                            <label for="voiceLanguage" class="form-label">Voice Recognition Language (Bhashini ASR)</label>
                             <select id="voiceLanguage" class="form-control">
-                                <option value="en-US">English (US)</option>
-                                <option value="en-GB">English (UK)</option>
-                                <option value="es-ES">Spanish</option>
-                                <option value="fr-FR">French</option>
-                                <option value="de-DE">German</option>
-                                <option value="hi-IN">Hindi</option>
+                                <option value="hi">Hindi</option>
+                                <option value="en">English</option>
+                                <option value="ta">Tamil</option>
+                                <option value="te">Telugu</option>
+                                <option value="kn">Kannada</option>
+                                <option value="ml">Malayalam</option>
+                                <option value="mr">Marathi</option>
+                                <option value="gu">Gujarati</option>
+                                <option value="bn">Bengali</option>
+                                <option value="pa">Punjabi</option>
                             </select>
                         </div>
                     </div>
 
                     <div class="settings-section">
-                        <h3>Account</h3>
+                        <h3 data-translate="appLanguageSettings">App Language</h3>
                         <div class="form-group">
-                            <button class="btn btn--outline" id="logoutBtn">Sign Out</button>
+                            <label for="appLanguageSelect" class="form-label" data-translate="interfaceLanguage">Interface Language</label>
+                            <select id="appLanguageSelect" class="form-control">
+                                <option value="en" data-translate="english">English</option>
+                                <option value="hi" data-translate="hindi">Hindi</option>
+                                <option value="ta" data-translate="tamil">Tamil</option>
+                                <option value="te" data-translate="telugu">Telugu</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <div class="settings-section">
+                        <h3 data-translate="account">Account</h3>
+                        <div class="form-group">
+                            <button class="btn btn--outline" id="logoutBtn" data-translate="signOut">Sign Out</button>
                         </div>
                     </div>
                 </div>
@@ -386,29 +1075,45 @@
                 </div>
                 <div class="modal-body">
                     <div class="language-options">
-                        <div class="language-option" data-lang="en-US">
-                            <span class="language-flag" aria-hidden="true">🇺🇸</span>
-                            <span class="language-name">English (US)</span>
-                        </div>
-                        <div class="language-option" data-lang="en-GB">
-                            <span class="language-flag" aria-hidden="true">🇬🇧</span>
-                            <span class="language-name">English (UK)</span>
-                        </div>
-                        <div class="language-option" data-lang="es-ES">
-                            <span class="language-flag" aria-hidden="true">🇪🇸</span>
-                            <span class="language-name">Spanish</span>
-                        </div>
-                        <div class="language-option" data-lang="fr-FR">
-                            <span class="language-flag" aria-hidden="true">🇫🇷</span>
-                            <span class="language-name">French</span>
-                        </div>
-                        <div class="language-option" data-lang="de-DE">
-                            <span class="language-flag" aria-hidden="true">🇩🇪</span>
-                            <span class="language-name">German</span>
-                        </div>
-                        <div class="language-option" data-lang="hi-IN">
+                        <div class="language-option" data-lang="hi">
                             <span class="language-flag" aria-hidden="true">🇮🇳</span>
                             <span class="language-name">Hindi</span>
+                        </div>
+                        <div class="language-option" data-lang="en">
+                            <span class="language-flag" aria-hidden="true">🇺🇸</span>
+                            <span class="language-name">English</span>
+                        </div>
+                        <div class="language-option" data-lang="ta">
+                            <span class="language-flag" aria-hidden="true">🇮🇳</span>
+                            <span class="language-name">Tamil</span>
+                        </div>
+                        <div class="language-option" data-lang="te">
+                            <span class="language-flag" aria-hidden="true">🇮🇳</span>
+                            <span class="language-name">Telugu</span>
+                        </div>
+                        <div class="language-option" data-lang="kn">
+                            <span class="language-flag" aria-hidden="true">🇮🇳</span>
+                            <span class="language-name">Kannada</span>
+                        </div>
+                        <div class="language-option" data-lang="ml">
+                            <span class="language-flag" aria-hidden="true">🇮🇳</span>
+                            <span class="language-name">Malayalam</span>
+                        </div>
+                        <div class="language-option" data-lang="mr">
+                            <span class="language-flag" aria-hidden="true">🇮🇳</span>
+                            <span class="language-name">Marathi</span>
+                        </div>
+                        <div class="language-option" data-lang="gu">
+                            <span class="language-flag" aria-hidden="true">🇮🇳</span>
+                            <span class="language-name">Gujarati</span>
+                        </div>
+                        <div class="language-option" data-lang="bn">
+                            <span class="language-flag" aria-hidden="true">🇮🇳</span>
+                            <span class="language-name">Bengali</span>
+                        </div>
+                        <div class="language-option" data-lang="pa">
+                            <span class="language-flag" aria-hidden="true">🇮🇳</span>
+                            <span class="language-name">Punjabi</span>
                         </div>
                     </div>
                 </div>
@@ -429,6 +1134,14 @@
         </div>
     </div>
 
+    <script src="translations.js"></script>
+    <script src="resume-export.js"></script>
+    <script src="bhashini-service.js"></script>
+    <script src="bhashini-websocket.js"></script>
+    <script src="audio-utils.js"></script>
+    <script src="multilingual-ner.js"></script>
+    <script src="bhashini-ner-service.js"></script>
+    <script src="ner-ui-components.js"></script>
     <script src="app.js"></script>
 </body>
 </html>
