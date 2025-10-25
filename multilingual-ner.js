@@ -792,24 +792,83 @@ class CVFieldMapper {
         const experience = [];
         const organizations = entities.filter(e => e.type === 'ORGANIZATION');
         const dates = entities.filter(e => e.type === 'DATE');
+        const educationTerms = entities.filter(e => e.type === 'EDUCATION');
         
-        // Group organizations with nearby dates and locations
-        for (const org of organizations) {
-            const nearbyEntities = this.findNearbyEntities(entities, org, text, 100);
+        // Filter out educational institutions from work experience
+        const workOrganizations = organizations.filter(org => {
+            // Check if this org is near education terms (likely a university/college)
+            const nearEducation = educationTerms.some(edu => 
+                Math.abs(edu.startPos - org.startPos) < 200
+            );
+            // Check if org name contains educational keywords
+            const eduKeywords = ['विश्वविद्यालय', 'कॉलेज', 'संस्थान', 'University', 'College', 'Institute', 'School', 'विद्यालय'];
+            const isEducational = eduKeywords.some(keyword => org.text.includes(keyword));
+            
+            return !nearEducation && !isEducational;
+        });
+        
+        // Extract ALL work experiences from text using patterns
+        const workExperiencePatterns = [
+            /(?:worked|work|कार्य|काम)\s+(?:at|in|as|में)\s+([^.,।]+?)(?:[.,।]|$)/gi,
+            /(?:company|कंपनी|organization|संगठन)[:\s]+([^.,।]+?)(?:[.,।]|$)/gi,
+            /([A-Z][A-Za-z\s&]+(?:Ltd|Limited|Inc|Corporation|Pvt|Private|Company|Technologies|Solutions|Services))/g
+        ];
+        
+        const extractedCompanies = new Set();
+        
+        // Add all detected organizations
+        for (const org of workOrganizations) {
+            extractedCompanies.add(org.text);
+        }
+        
+        // Extract additional companies from text patterns
+        for (const pattern of workExperiencePatterns) {
+            let match;
+            while ((match = pattern.exec(text)) !== null) {
+                if (match[1] && match[1].trim().length > 2) {
+                    const company = match[1].trim();
+                    // Don't add if it's an educational institution
+                    const eduKeywords = ['University', 'College', 'Institute', 'School', 'विश्वविद्यालय', 'कॉलेज'];
+                    if (!eduKeywords.some(keyword => company.includes(keyword))) {
+                        extractedCompanies.add(company);
+                    }
+                }
+            }
+        }
+        
+        // Create experience entries for each company
+        for (const company of extractedCompanies) {
+            // Find the organization entity if exists
+            const orgEntity = organizations.find(org => org.text === company);
+            const nearbyEntities = orgEntity ? this.findNearbyEntities(entities, orgEntity, text, 150) : [];
+            
+            // Find context around this company mention
+            const companyIndex = text.indexOf(company);
+            const contextStart = Math.max(0, companyIndex - 200);
+            const contextEnd = Math.min(text.length, companyIndex + company.length + 200);
+            const context = text.substring(contextStart, contextEnd);
+            
+            // Extract dates near this company
+            const datesNearby = dates.filter(d => {
+                if (!orgEntity) return false;
+                return Math.abs(d.startPos - orgEntity.startPos) <= 150;
+            });
             
             experience.push({
-                company: org.text,
-                jobTitle: this.inferPosition(text, org),
-                position: this.inferPosition(text, org),
+                company: company,
+                jobTitle: this.inferPosition(context, { text: company, startPos: companyIndex }),
+                position: this.inferPosition(context, { text: company, startPos: companyIndex }),
                 location: nearbyEntities.find(e => e.type === 'LOCATION')?.text || '',
-                duration: nearbyEntities.find(e => e.type === 'DATE')?.text || '',
-                startDate: nearbyEntities.find(e => e.type === 'DATE')?.text || '',
-                description: this.extractContextualDescription(text, org),
-                confidence: org.confidence
+                duration: datesNearby[0]?.text || '',
+                startDate: datesNearby[0]?.text || '',
+                endDate: datesNearby[1]?.text || '',
+                description: this.extractContextualDescription(text, { text: company, startPos: companyIndex }),
+                confidence: orgEntity?.confidence || 0.7
             });
         }
         
-        return experience;
+        // Sort by confidence and position in text
+        return experience.sort((a, b) => b.confidence - a.confidence);
     }
     
     extractWorkExperience(entities, text) {
@@ -833,23 +892,89 @@ class CVFieldMapper {
         const education = [];
         const educationTerms = entities.filter(e => e.type === 'EDUCATION');
         const organizations = entities.filter(e => e.type === 'ORGANIZATION');
+        const text = entities[0]?.language || '';
         
-        // Look for educational institutions
+        // Look for educational institutions from organizations
         const educationalOrgs = organizations.filter(org => 
             this.isEducationalInstitution(org.text)
         );
         
+        // Extract institution names from text patterns
+        const institutionPatterns = [
+            /(?:from|at|studied at|पढ़ाई|अध्ययन)\s+([^.,।]+?(?:University|College|Institute|School|विश्वविद्यालय|कॉलेज|संस्थान|विद्यालय)[^.,।]*?)(?:[.,।]|$)/gi,
+            /([A-Z][A-Za-z\s]+(?:University|College|Institute|School))/g,
+            /((?:विश्वविद्यालय|कॉलेज|संस्थान)[^.,।]*?)(?:[.,।]|$)/g
+        ];
+        
+        const extractedInstitutions = new Set();
+        
+        // Add all detected educational organizations
+        for (const org of educationalOrgs) {
+            extractedInstitutions.add(org.text);
+        }
+        
+        // Extract additional institutions from text (using metadata rawText if available)
+        const fullText = entities.find(e => e.metadata?.rawText)?.metadata?.rawText || '';
+        if (fullText) {
+            for (const pattern of institutionPatterns) {
+                let match;
+                while ((match = pattern.exec(fullText)) !== null) {
+                    if (match[1] && match[1].trim().length > 3) {
+                        extractedInstitutions.add(match[1].trim());
+                    }
+                }
+            }
+        }
+        
+        // Match education terms with institutions
         for (const term of educationTerms) {
+            // Find nearby organizations (within 200 chars)
             const nearbyOrgs = educationalOrgs.filter(org => 
                 Math.abs(org.startPos - term.startPos) < 200
             );
             
+            // Find ANY nearby organization (not just educational)
+            const nearbyAnyOrgs = organizations.filter(org => 
+                Math.abs(org.startPos - term.startPos) < 200
+            );
+            
+            // Pick the best institution
+            let institution = '';
+            if (nearbyOrgs.length > 0) {
+                institution = nearbyOrgs[0].text;
+            } else if (nearbyAnyOrgs.length > 0) {
+                // Check if any nearby org looks educational
+                const probablyEducational = nearbyAnyOrgs.find(org => 
+                    this.isEducationalInstitution(org.text)
+                );
+                if (probablyEducational) {
+                    institution = probablyEducational.text;
+                }
+            } else if (extractedInstitutions.size > 0) {
+                // Use first extracted institution
+                institution = Array.from(extractedInstitutions)[0];
+            }
+            
             education.push({
                 degree: term.text,
-                institution: nearbyOrgs[0]?.text || '',
+                institution: institution,
                 field: this.inferField(term.text),
+                year: '',
                 confidence: term.confidence
             });
+        }
+        
+        // If no education terms found but we have educational institutions, create entries
+        if (education.length === 0 && extractedInstitutions.size > 0) {
+            for (const inst of extractedInstitutions) {
+                education.push({
+                    degree: '',
+                    institution: inst,
+                    field: '',
+                    year: '',
+                    confidence: 0.75
+                });
+            }
         }
         
         return education;

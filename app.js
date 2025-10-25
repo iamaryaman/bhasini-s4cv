@@ -24,6 +24,17 @@ class VoiceCVApp {
         this.currentLanguage = 'hi'; // Default to Hindi for Bhashini
         this.user = null;
         this.uploadedDocuments = [];
+        
+        // Initialize Hybrid CV Extraction (AI + NER)
+        this.hybridExtractor = new HybridCVExtraction();
+        this.hybridExtractor.setNEREngine(new MultilingualNEREngine());
+        
+        // Check if API key is configured (load from localStorage)
+        const savedApiKey = localStorage.getItem('openrouter_api_key');
+        if (savedApiKey && savedApiKey.trim().length > 0) {
+            this.hybridExtractor.setApiKey(savedApiKey);
+            console.log('✅ AI service initialized with saved API key');
+        }
 
         this.sections = [
             { id: 'contact', name: 'Contact Information', description: 'Provide your basic contact details' },
@@ -41,6 +52,9 @@ class VoiceCVApp {
         this.initializeSpeechRecognition();
         this.loadUserPreferences();
         this.setupAccessibility();
+        
+        // Update AI status indicator
+        this.updateAIStatus();
         
         // Load translations on page load
         if (typeof updatePageTranslations === 'function') {
@@ -334,7 +348,7 @@ class VoiceCVApp {
     }
 
     /**
-     * Process recorded audio with Bhashini ASR
+     * Process recorded audio with Bhashini ASR and AI Extraction
      */
     async processRecordedAudio(audioBlob) {
         if (this.isProcessingAudio) {
@@ -369,6 +383,62 @@ class VoiceCVApp {
             this.updateVoiceStatus('Transcription complete!');
             this.showStatusMessage('Audio transcribed successfully', 'success');
             
+            // NEW: Extract CV data using AI ONLY (no hybrid, no NER)
+            console.log('\n🤖 Starting AI CV Extraction...');
+            this.updateVoiceStatus('Extracting CV data with AI...');
+            
+            try {
+                const fullTranscript = transcriptionArea.value;
+                
+                // Check if AI is configured
+                if (!this.hybridExtractor.aiService.isConfigured()) {
+                    throw new Error('AI service not configured. Please add your OpenRouter API key in Settings.');
+                }
+                
+                // Use AI service directly (no hybrid, no NER fallback)
+                console.log('📝 Using pure AI extraction for best results...');
+                const extractedData = await this.hybridExtractor.aiService.extractCVData(
+                    fullTranscript,
+                    this.currentLanguage
+                );
+                
+                console.log('✅ AI extraction complete:', extractedData);
+                
+                // Update resume data with extracted information
+                this.resumeData = this.convertExtractedToResumeData(extractedData);
+                
+                // Show success message
+                this.showStatusMessage(
+                    '✨ CV data extracted successfully with AI!',
+                    'success'
+                );
+                
+                // Auto-navigate to review screen
+                setTimeout(() => {
+                    this.showScreen('reviewScreen');
+                    this.generateResumePreview();
+                }, 1500);
+                
+            } catch (extractionError) {
+                console.error('❌ AI extraction failed:', extractionError);
+                
+                // Show helpful error message
+                if (extractionError.message.includes('not configured')) {
+                    this.showStatusMessage(
+                        '⚠️ AI service not configured. Please add your OpenRouter API key in Settings.',
+                        'error'
+                    );
+                } else {
+                    this.showStatusMessage(
+                        `⚠️ AI extraction failed: ${extractionError.message}`,
+                        'error'
+                    );
+                }
+                
+                // Don't navigate, let user see transcription
+                console.log('💡 Tip: Check your API key and network connection');
+            }
+            
             // Auto-hide status after 3 seconds
             setTimeout(() => {
                 this.updateVoiceStatus('');
@@ -381,6 +451,77 @@ class VoiceCVApp {
         } finally {
             this.isProcessingAudio = false;
         }
+    }
+    
+    /**
+     * Convert hybrid extractor output to resumeData format
+     * @param {Object} extracted - Extracted CV data from hybrid extractor
+     * @returns {Object} Resume data in app format
+     */
+    convertExtractedToResumeData(extracted) {
+        const resumeData = {
+            contact: {},
+            summary: '',
+            experience: [],
+            education: [],
+            skills: {}
+        };
+        
+        // Convert personal info
+        if (extracted.personal_info) {
+            resumeData.contact = {
+                name: extracted.personal_info.name,
+                email: extracted.personal_info.email,
+                phone: extracted.personal_info.phone,
+                location: extracted.personal_info.location,
+                linkedin: extracted.personal_info.linkedin,
+                github: extracted.personal_info.github
+            };
+        }
+        
+        // Convert summary
+        resumeData.summary = extracted.summary || '';
+        
+        // Convert work experience
+        if (extracted.work_experience && Array.isArray(extracted.work_experience)) {
+            resumeData.experience = extracted.work_experience.map(exp => ({
+                company: exp.company,
+                jobTitle: exp.job_title,
+                location: exp.location,
+                startDate: exp.start_date,
+                endDate: exp.end_date,
+                description: exp.responsibilities ? exp.responsibilities.join('\n• ') : '',
+                responsibilities: exp.responsibilities
+            }));
+        }
+        
+        // Convert education
+        if (extracted.education && Array.isArray(extracted.education)) {
+            resumeData.education = extracted.education.map(edu => ({
+                institution: edu.institution,
+                degree: edu.degree,
+                field: edu.field_of_study,
+                location: edu.location,
+                startDate: edu.start_date,
+                endDate: edu.end_date,
+                gpa: edu.gpa,
+                description: `${edu.degree}${edu.field_of_study ? ' in ' + edu.field_of_study : ''}`
+            }));
+        }
+        
+        // Convert skills
+        if (extracted.skills && Array.isArray(extracted.skills)) {
+            resumeData.skills = {
+                all: extracted.skills,
+                technical: extracted.skills
+            };
+        }
+        
+        // Store extraction metadata
+        resumeData.extractionMetadata = extracted.metadata;
+        
+        console.log('📊 Converted resume data:', resumeData);
+        return resumeData;
     }
 
     loadUserPreferences() {
@@ -510,9 +651,15 @@ class VoiceCVApp {
             // Show success message and proceed
             this.showStatusMessage(`${mode} mode selected`, 'success');
             
-            // Auto-proceed after selection
+            // Auto-proceed after selection - skip auth if using ngrok OAuth
             setTimeout(() => {
-                this.showScreen('authScreen');
+                // Check if ngrok OAuth is being used (user already authenticated)
+                if (this.isNgrokOAuth()) {
+                    this.user = { email: 'ngrok-user', name: 'User' };
+                    this.showScreen('templateScreen');
+                } else {
+                    this.showScreen('authScreen');
+                }
             }, 1000);
         }
     }
@@ -700,6 +847,17 @@ class VoiceCVApp {
     isValidEmail(email) {
         const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
         return emailRegex.test(email);
+    }
+    
+    // Check if user accessed via ngrok with OAuth
+    isNgrokOAuth() {
+        // ngrok OAuth adds specific headers that we can detect
+        // Also check if URL contains ngrok domain
+        const hostname = window.location.hostname;
+        return hostname.includes('ngrok') || 
+               hostname.includes('ngrok.io') || 
+               hostname.includes('ngrok-free.app') ||
+               hostname.includes('ngrok.app');
     }
 
     selectTemplate(templateId) {
@@ -3420,6 +3578,52 @@ class VoiceCVApp {
     changeVoiceLanguage(lang) {
         this.currentLanguage = lang;
         this.showStatusMessage(`Voice recognition language changed`, 'info');
+    }
+    
+    /**
+     * Configure OpenRouter API key for AI extraction
+     */
+    configureAIKey() {
+        const apiKey = prompt('Enter your OpenRouter API key (get free at https://openrouter.ai):');
+        if (apiKey && apiKey.trim().length > 0) {
+            localStorage.setItem('openrouter_api_key', apiKey.trim());
+            this.hybridExtractor.setApiKey(apiKey.trim());
+            this.updateAIStatus();
+            this.showStatusMessage('✅ AI service configured successfully!', 'success');
+        } else {
+            this.showStatusMessage('⚠️ API key not set. Using NER fallback only.', 'warning');
+        }
+    }
+    
+    /**
+     * Clear saved API key and disable AI extraction
+     */
+    clearAIKey() {
+        localStorage.removeItem('openrouter_api_key');
+        this.hybridExtractor.configure({ useAI: false });
+        this.updateAIStatus();
+        this.showStatusMessage('ℹ️ AI service disabled. Using NER extraction only.', 'info');
+    }
+    
+    /**
+     * Update AI status indicator in settings
+     */
+    updateAIStatus() {
+        const indicator = document.getElementById('aiStatusIndicator');
+        if (!indicator) return;
+        
+        const readiness = this.hybridExtractor.checkReadiness();
+        
+        if (readiness.aiAvailable) {
+            indicator.textContent = '✅ AI Enabled';
+            indicator.style.color = '#10b981';
+        } else if (readiness.nerAvailable) {
+            indicator.textContent = '⚠️ NER Only';
+            indicator.style.color = '#f59e0b';
+        } else {
+            indicator.textContent = '❌ Not configured';
+            indicator.style.color = '#ef4444';
+        }
         // Do NOT update interface translations - this is only for voice processing
     }
 }
