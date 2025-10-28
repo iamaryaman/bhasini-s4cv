@@ -36,17 +36,28 @@ class OllamaOptimizationService {
      */
     async testConnection() {
         try {
-            const response = await fetch(`${this.ollamaBaseURL}/api/tags`, {
+            // Normalize URL - remove trailing slash if present
+            const baseURL = this.ollamaBaseURL.replace(/\/$/, '');
+            
+            const response = await fetch(`${baseURL}/api/tags`, {
                 method: 'GET',
                 headers: {
                     'Content-Type': 'application/json'
-                }
+                },
+                redirect: 'follow' // Follow redirects automatically
             });
 
             if (response.ok) {
                 console.log('✅ Ollama server is reachable');
                 this.lastError = null;
                 return true;
+            } else if (response.status === 301 || response.status === 302) {
+                // Handle redirect
+                const redirectURL = response.headers.get('Location');
+                console.warn('⚠️ Server redirected to:', redirectURL);
+                console.warn('Update your server URL to:', redirectURL.replace('/api/tags', ''));
+                this.lastError = `Server redirected (301). Check URL format.`;
+                return false;
             } else {
                 this.lastError = `HTTP ${response.status}`;
                 console.error('❌ Ollama server returned error:', response.status);
@@ -69,8 +80,14 @@ class OllamaOptimizationService {
         this.lastError = null;
 
         try {
+            // DEBUG: Log the resume data being sent
+            console.log('🔍 Resume data being sent to Ollama:', JSON.stringify(resumeData, null, 2));
+            
             // Build comprehensive prompt for optimization
             const prompt = this.buildOptimizationPrompt(resumeData);
+            
+            // DEBUG: Log a preview of the prompt
+            console.log('📝 Prompt preview (first 500 chars):', prompt.substring(0, 500));
 
             // Prepare request body for Ollama API
             const requestBody = {
@@ -86,17 +103,25 @@ class OllamaOptimizationService {
             };
 
             console.log('🚀 Sending optimization request to Ollama...');
+            
+            // Normalize URL - remove trailing slash if present
+            const baseURL = this.ollamaBaseURL.replace(/\/$/, '');
 
             // POST request to Ollama
-            const response = await fetch(`${this.ollamaBaseURL}/api/generate`, {
+            const response = await fetch(`${baseURL}/api/generate`, {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json'
                 },
-                body: JSON.stringify(requestBody)
+                body: JSON.stringify(requestBody),
+                redirect: 'follow' // Follow redirects automatically
             });
 
             if (!response.ok) {
+                if (response.status === 301 || response.status === 302) {
+                    const redirectURL = response.headers.get('Location');
+                    throw new Error(`Server redirected (${response.status}). Your server URL might be incorrect. Redirect to: ${redirectURL}`);
+                }
                 throw new Error(`HTTP ${response.status}: ${response.statusText}`);
             }
 
@@ -122,15 +147,28 @@ class OllamaOptimizationService {
      * @private
      */
     buildOptimizationPrompt(resumeData) {
-        // Extract resume data fields
-        const name = resumeData.contact?.fullName || resumeData.personalInfo?.fullName || '';
+        // Extract resume data fields - FIXED: Handle BOTH data structures (AI extraction vs NER)
+        // AI extraction uses: contact.name
+        // Manual NER uses: personalInfo.fullName
+        const name = resumeData.contact?.name || resumeData.personalInfo?.fullName || resumeData.contact?.fullName || '';
         const email = resumeData.contact?.email || resumeData.personalInfo?.email || '';
         const phone = resumeData.contact?.phone || resumeData.personalInfo?.phone || '';
-        const location = resumeData.contact?.address || resumeData.personalInfo?.address || '';
-        const summary = resumeData.summary || '';
-        const experience = JSON.stringify(resumeData.experience || []);
+        const location = resumeData.contact?.location || resumeData.personalInfo?.location || resumeData.personalInfo?.address || resumeData.contact?.address || '';
+        const summary = resumeData.summary || resumeData.professionalSummary || '';
+        // Handle both field names: experience vs workExperience
+        const experience = JSON.stringify(resumeData.experience || resumeData.workExperience || []);
         const education = JSON.stringify(resumeData.education || []);
         const skills = JSON.stringify(resumeData.skills || []);
+
+        // DEBUG: Log extracted fields
+        console.log('🔍 Extracted fields for prompt:');
+        console.log('  Name:', name || '(empty)');
+        console.log('  Email:', email || '(empty)');
+        console.log('  Location:', location || '(empty)');
+        console.log('  Summary length:', summary.length, 'chars');
+        console.log('  Experience items:', (resumeData.experience || resumeData.workExperience || []).length);
+        console.log('  Education items:', (resumeData.education || []).length);
+        console.log('  Skills:', skills !== '[]' ? 'present' : 'empty');
 
         return `You are an expert resume optimization AI that improves resumes for Applicant Tracking Systems (ATS) and readability.
 
