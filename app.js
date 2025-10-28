@@ -35,6 +35,13 @@ class VoiceCVApp {
             this.hybridExtractor.setApiKey(savedApiKey);
             console.log('✅ AI service initialized with saved API key');
         }
+        
+        // Initialize Bhashini Translation Service
+        this.translationService = null;
+        if (typeof BhashiniTranslationService !== 'undefined') {
+            this.translationService = new BhashiniTranslationService();
+            console.log('✅ Bhashini Translation Service initialized');
+        }
 
         this.sections = [
             { id: 'contact', name: 'Contact Information', description: 'Provide your basic contact details' },
@@ -53,13 +60,8 @@ class VoiceCVApp {
         this.loadUserPreferences();
         this.setupAccessibility();
         
-        // Update AI status indicator
-        this.updateAIStatus();
-        
-        // Load translations on page load
-        if (typeof updatePageTranslations === 'function') {
-            updatePageTranslations();
-        }
+        // DO NOT load translations on page load - keep original English
+        // Translations only happen when user explicitly changes language
         
         // Load saved theme preference
         this.loadThemePreference();
@@ -194,11 +196,13 @@ class VoiceCVApp {
         const accessibilityModeSelect = document.getElementById('accessibilityMode');
         const highContrastCheck = document.getElementById('highContrast');
         const voiceLanguageSelect = document.getElementById('voiceLanguage');
+        const appLanguageSelect = document.getElementById('appLanguageSelect');
         const logoutBtn = document.getElementById('logoutBtn');
 
         if (accessibilityModeSelect) accessibilityModeSelect.addEventListener('change', (e) => this.changeAccessibilityMode(e.target.value));
         if (highContrastCheck) highContrastCheck.addEventListener('change', (e) => this.toggleHighContrast(e.target.checked));
         if (voiceLanguageSelect) voiceLanguageSelect.addEventListener('change', (e) => this.changeVoiceLanguage(e.target.value));
+        if (appLanguageSelect) appLanguageSelect.addEventListener('change', (e) => this.changeAppLanguage(e.target.value));
         if (logoutBtn) logoutBtn.addEventListener('click', (e) => { e.preventDefault(); this.logout(); });
 
         // Language selection
@@ -1423,36 +1427,18 @@ class VoiceCVApp {
     }
 
     selectLanguage(lang) {
-        this.currentLanguage = lang;
-        
-        // Save language preference
-        localStorage.setItem('appLanguage', lang);
-        
-        // Update UI
+        // Update UI in language modal
         document.querySelectorAll('.language-option').forEach(opt => opt.classList.remove('selected'));
         const selectedOption = document.querySelector(`[data-lang="${lang}"]`);
         if (selectedOption) {
             selectedOption.classList.add('selected');
         }
         
-        const langNameElement = document.querySelector(`[data-lang="${lang}"] .language-name`);
-        const currentLanguageElement = document.getElementById('currentLanguage');
-        if (langNameElement && currentLanguageElement) {
-            const langName = langNameElement.textContent;
-            currentLanguageElement.textContent = langName.split(' ')[0];
-        }
-        
-        // Update all page translations if translations are loaded
-        if (typeof updatePageTranslations === 'function') {
-            updatePageTranslations();
-        }
-        
-        this.saveUserPreferences();
+        // Close modal
         this.closeModal(document.getElementById('languageModal'));
         
-        // Use translated message
-        const message = typeof t === 'function' ? t('languageSwitched') : 'Language changed to';
-        this.showStatusMessage(`${message} ${langNameElement ? langNameElement.textContent : lang}`, 'info');
+        // Use the unified changeAppLanguage method
+        this.changeAppLanguage(lang);
     }
 
     setTheme(theme) {
@@ -3533,11 +3519,14 @@ class VoiceCVApp {
     }
     
     /**
-     * Update all translations
+     * Update all translations using old fallback method (deprecated - only used as fallback)
      */
-    updateTranslations() {
+    async updateTranslations() {
+        // This is now a fallback only - page translator handles most translations
+        console.warn('Using fallback translation method');
+        
         if (typeof updatePageTranslations === 'function') {
-            updatePageTranslations();
+            await updatePageTranslations();
         }
         
         // Refresh resume preview if it exists
@@ -3550,26 +3539,86 @@ class VoiceCVApp {
     
     /**
      * Change app language (interface language, independent from voice recognition)
+     * Now uses Bhashini Translation Service for dynamic translation
      */
-    changeAppLanguage(lang) {
+    async changeAppLanguage(lang) {
         localStorage.setItem('appLanguage', lang);
         this.currentUILanguage = lang;
-        this.updateTranslations();
+        
+        // Update the ASR language as well to match
+        this.currentLanguage = lang;
         
         // Update current language display in header
         const currentLangEl = document.getElementById('currentLanguage');
-        if (currentLangEl && typeof t === 'function') {
+        if (currentLangEl) {
             const langNames = {
-                'en': 'english',
-                'hi': 'hindi', 
-                'ta': 'tamil',
-                'te': 'telugu'
+                'en': 'English',
+                'hi': 'Hindi', 
+                'ta': 'Tamil',
+                'te': 'Telugu',
+                'kn': 'Kannada',
+                'ml': 'Malayalam',
+                'mr': 'Marathi',
+                'gu': 'Gujarati',
+                'bn': 'Bengali',
+                'pa': 'Punjabi',
+                'or': 'Odia',
+                'as': 'Assamese',
+                'ur': 'Urdu'
             };
-            const langKey = langNames[lang] || 'english';
-            currentLangEl.textContent = t(langKey);
+            currentLangEl.textContent = langNames[lang] || 'English';
         }
         
-        this.showStatusMessage(typeof t === 'function' ? t('languageChanged') : 'Language changed successfully', 'success');
+        // Update the select dropdown if it exists
+        const appLanguageSelect = document.getElementById('appLanguageSelect');
+        if (appLanguageSelect) {
+            appLanguageSelect.value = lang;
+        }
+        
+        // Update voice language dropdown too
+        const voiceLanguageSelect = document.getElementById('voiceLanguage');
+        if (voiceLanguageSelect) {
+            voiceLanguageSelect.value = lang;
+        }
+        
+        // Use Page Translator for dynamic Bhashini translation
+        // Initialize on first use to capture original English content
+        if (lang !== 'en') {
+            try {
+                // Lazy initialize page translator on first language change
+                if (!window.pageTranslator) {
+                    console.log('🌍 Initializing Page Translator for first time...');
+                    window.pageTranslator = new PageTranslator();
+                }
+                
+                // Translate entire page to target language
+                await window.pageTranslator.translatePage(lang);
+            } catch (error) {
+                console.error('Page translation error:', error);
+                this.showStatusMessage('Translation service error. Using fallback.', 'warning');
+                // Fallback to old method
+                await this.updateTranslations();
+            }
+        } else {
+            // Reset to English if translator exists
+            if (window.pageTranslator) {
+                window.pageTranslator.resetToOriginal();
+            }
+            // No need for fallback translation for English
+        }
+        
+        // Preload pipeline for ASR
+        if (this.bhashiniService) {
+            this.bhashiniService.getPipelineConfig(lang)
+                .then(config => {
+                    console.log('ASR pipeline configured for', lang);
+                })
+                .catch(error => {
+                    console.error('Failed to configure ASR pipeline:', error);
+                });
+        }
+        
+        this.showStatusMessage('Language changed successfully', 'success');
     }
     
     /**
@@ -3580,52 +3629,6 @@ class VoiceCVApp {
         this.showStatusMessage(`Voice recognition language changed`, 'info');
     }
     
-    /**
-     * Configure OpenRouter API key for AI extraction
-     */
-    configureAIKey() {
-        const apiKey = prompt('Enter your OpenRouter API key (get free at https://openrouter.ai):');
-        if (apiKey && apiKey.trim().length > 0) {
-            localStorage.setItem('openrouter_api_key', apiKey.trim());
-            this.hybridExtractor.setApiKey(apiKey.trim());
-            this.updateAIStatus();
-            this.showStatusMessage('✅ AI service configured successfully!', 'success');
-        } else {
-            this.showStatusMessage('⚠️ API key not set. Using NER fallback only.', 'warning');
-        }
-    }
-    
-    /**
-     * Clear saved API key and disable AI extraction
-     */
-    clearAIKey() {
-        localStorage.removeItem('openrouter_api_key');
-        this.hybridExtractor.configure({ useAI: false });
-        this.updateAIStatus();
-        this.showStatusMessage('ℹ️ AI service disabled. Using NER extraction only.', 'info');
-    }
-    
-    /**
-     * Update AI status indicator in settings
-     */
-    updateAIStatus() {
-        const indicator = document.getElementById('aiStatusIndicator');
-        if (!indicator) return;
-        
-        const readiness = this.hybridExtractor.checkReadiness();
-        
-        if (readiness.aiAvailable) {
-            indicator.textContent = '✅ AI Enabled';
-            indicator.style.color = '#10b981';
-        } else if (readiness.nerAvailable) {
-            indicator.textContent = '⚠️ NER Only';
-            indicator.style.color = '#f59e0b';
-        } else {
-            indicator.textContent = '❌ Not configured';
-            indicator.style.color = '#ef4444';
-        }
-        // Do NOT update interface translations - this is only for voice processing
-    }
 }
 
 // Initialize the app when DOM is loaded

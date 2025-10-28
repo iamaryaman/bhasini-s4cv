@@ -1051,29 +1051,13 @@
                                 <option value="hi" data-translate="hindi">Hindi</option>
                                 <option value="ta" data-translate="tamil">Tamil</option>
                                 <option value="te" data-translate="telugu">Telugu</option>
+                                <option value="kn">Kannada</option>
+                                <option value="ml">Malayalam</option>
+                                <option value="mr">Marathi</option>
+                                <option value="gu">Gujarati</option>
+                                <option value="bn">Bengali</option>
+                                <option value="pa">Punjabi</option>
                             </select>
-                        </div>
-                    </div>
-
-                    <!-- AI Extraction Settings -->
-                    <div class="settings-section">
-                        <h3>🤖 AI-Powered Extraction</h3>
-                        <p class="form-help" style="margin-bottom: 15px;">
-                            Enable AI extraction using Mistral 7B for more accurate CV generation. Falls back to pattern-based NER if unavailable.
-                        </p>
-                        <div class="form-group" style="display: flex; flex-direction: column; gap: 10px;">
-                            <button onclick="app.configureAIKey()" class="btn btn--primary" style="width: 100%;">
-                                🔑 Configure API Key
-                            </button>
-                            <button onclick="app.clearAIKey()" class="btn btn--outline" style="width: 100%;">
-                                🚫 Disable AI Extraction
-                            </button>
-                        </div>
-                        <div style="margin-top: 15px; padding: 12px; background: #1e2139; border-radius: 8px; border: 1px solid rgba(148, 163, 184, 0.1);">
-                            <p style="color: #94a3b8; font-size: 0.75rem; margin: 0;">
-                                <strong>Get Free API Key:</strong> <a href="https://openrouter.ai" target="_blank" style="color: #6366f1; text-decoration: none;">openrouter.ai</a><br>
-                                <span style="margin-top: 5px; display: block;">Status: <span id="aiStatusIndicator" style="color: #f59e0b;">Not configured</span></span>
-                            </p>
                         </div>
                     </div>
 
@@ -1157,8 +1141,11 @@
     </div>
 
     <script src="translations.js"></script>
+    <script src="bhashini-translation-service.js"></script>
     <script src="export-simple.js"></script>
     <script src="bhashini-service.js"></script>
+    <script src="bhashini-translation-service.js"></script>
+    <script src="page-translator.js"></script>
     <script src="bhashini-websocket.js"></script>
     <script src="audio-utils.js"></script>
     <script src="multilingual-ner.js"></script>
@@ -1167,6 +1154,9 @@
     <!-- AI Extraction Services -->
     <script src="ai-extraction-service.js?v=3"></script>
     <script src="hybrid-cv-extraction.js?v=3"></script>
+    <!-- Ollama Optimization Services -->
+    <script src="ollama-optimization-service.js"></script>
+    <script src="ollama-ui-integration.js"></script>
     <script src="app.js"></script>
 </body>
 </html>

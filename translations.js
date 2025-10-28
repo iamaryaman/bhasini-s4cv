@@ -1,5 +1,8 @@
 // Language translations for the S4CV application
-const translations = {
+// Now using Bhashini Translation Service for dynamic translation
+
+// English is the base language - all strings defined here
+const baseTranslations = {
     en: {
         // Header
         appName: "S4CV",
@@ -199,7 +202,7 @@ const translations = {
         
         // App Language Settings
         appLanguageSettings: "App Language",
-        interfaceLanguage: "Interface Language"
+        interfaceLanguage: "Interface Language",
         
         // Main content
         voiceResumeBuilder: "Voice Resume Builder",
@@ -256,292 +259,24 @@ const translations = {
         languageDetected: "Language detected",
         confidence: "confidence",
         languageChanged: "Language changed successfully"
-    },
-    hi: {
-        // Header
-        appName: "S4CV",
-        dashboard: "डैशबोर्ड",
-        settings: "सेटिंग्स",
-        newResume: "नया रिज्यूमे",
-        connecting: "कनेक्ट हो रहा है...",
-        connected: "कनेक्टेड",
-        disconnected: "डिस्कनेक्टेड",
-        
-        // Main page content
-        singleVoiceInputCVBuilder: "सिंगल वॉइस इनपुट सीवी बिल्डर",
-        oneRecordingSession: "एक रिकॉर्डिंग सेशन - सभी सीवी जानकारी",
-        noMultipleInputs: "कई इनपुट की जरूरत नहीं! बस रिकॉर्ड दबाएं और अपनी पूरी व्यावसायिक पृष्ठभूमि के बारे में लगातार बोलें। AI सब कुछ स्वचालित रूप से निकालेगा और व्यवस्थित करेगा।",
-        speakAboutAll: "इन सभी के बारे में एक साथ बोलें:",
-        fullNameContact: "आपका पूरा नाम और संपर्क विवरण",
-        workExperience: "सभी कार्य अनुभव और कंपनियां",
-        educationHistory: "पूरा शिक्षा इतिहास",
-        technicalSkills: "सभी तकनीकी और सॉफ्ट स्किल्स",
-        languagesFluent: "आपकी धाराप्रवाह भाषाएं",
-        locationDetails: "स्थान और अन्य विवरण",
-        aiProcessing: "AI प्रोसेसिंग:",
-        aiProcessingDesc: "सिस्टम आपकी वाणी को स्वचालित रूप से पार्स करेगा और इसे उचित सीवी अनुभागों में व्यवस्थित करेगा।",
-        autoDetectLanguage: "स्वतः भाषा पहचान",
-        autoDetectEnabled: "स्वतः पहचान सक्षम",
-        singleSpeechInput: "सिंगल स्पीच इनपुट:",
-        speakContinuously: "अपनी पूरी व्यावसायिक पृष्ठभूमि के बारे में लगातार बोलें",
-        startCompleteCVRecording: "पूर्ण सीवी रिकॉर्डिंग शुरू करें",
-        oneContinuousSession: "एक निरंतर सेशन • सभी सीवी जानकारी • AI स्वतः सब कुछ निकालता है",
-        noNeedToPause: "रुकने या विषयों को अलग करने की जरूरत नहीं - बस स्वाभाविक रूप से सब कुछ बोलें!",
-        singleVoiceInputComplete: "सिंगल वॉइस इनपुट - पूरी सीवी जानकारी",
-        exampleRecording: "एक रिकॉर्डिंग में क्या कहना है का उदाहरण:",
-        aiWillExtract: "AI स्वचालित रूप से इसे निकालेगा और उचित सीवी अनुभागों में व्यवस्थित करेगा!",
-        generateMyCV: "मेरी सीवी जेनरेट करें",
-        startOver: "फिर से शुरू करें",
-        copyText: "टेक्स्ट कॉपी करें",
-        resumePreview: "रिज्यूमे प्रीव्यू",
-        exportThisResume: "इस रिज्यूमे को एक्सपोर्ट करें",
-        exportResume: "रिज्यूमे एक्सपोर्ट करें",
-        chooseExportFormat: "अपना एक्सपोर्ट फॉर्मेट चुनें:",
-        exportAsPDF: "PDF के रूप में एक्सपोर्ट करें",
-        exportAsWord: "वर्ड डॉक्यूमेंट के रूप में एक्सपोर्ट करें",
-        contactInformation: "संपर्क जानकारी",
-        professionalSummary: "व्यावसायिक सारांश",
-        workExperienceSection: "कार्य अनुभव",
-        educationSection: "शिक्षा",
-        skillsSection: "स्किल्स",
-        technicalSkillsLabel: "तकनीकी स्किल्स",
-        softSkillsLabel: "सॉफ्ट स्किल्स",
-        languagesLabel: "भाषाएं",
-        email: "ईमेल",
-        phone: "फोन",
-        location: "स्थान",
-        
-        // Welcome screen
-        welcomeTitle: "S4CV में आपका स्वागत है",
-        welcomeSubtitle: "स्मार्ट वॉइस रिज्यूमे बिल्डर",
-        selectAccessibilityMode: "अपना पसंदीदा अनुभव चुनें",
-        normalMode: "मानक अनुभव",
-        normalModeDesc: "पूर्ण दृश्य और ऑडियो इंटरफेस",
-        deafMode: "बहरे/सुनने में कठिनाई",
-        deafModeDesc: "बेहतर दृश्य फीडबैक और टेक्स्ट-आधारित इंटरैक्शन",
-        blindMode: "अंधे/कम दृष्टि",
-        blindModeDesc: "ऑडियो गाइडेंस के साथ स्क्रीन रीडर अनुकूलित",
-        continueButton: "जारी रखें",
-        
-        // Authentication
-        signIn: "साइन इन करें",
-        signUp: "साइन अप करें",
-        signInTitle: "अपने खाते में साइन इन करें",
-        signUpTitle: "अपना खाता बनाएं",
-        emailAddress: "ईमेल पता",
-        password: "पासवर्ड",
-        confirmPassword: "पासवर्ड की पुष्टि करें",
-        fullName: "पूरा नाम",
-        rememberMe: "मुझे याद रखें",
-        forgotPassword: "पासवर्ड भूल गए?",
-        dontHaveAccount: "कोई खाता नहीं है?",
-        alreadyHaveAccount: "पहले से खाता है?",
-        signUpLink: "साइन अप करें",
-        signInLink: "साइन इन करें",
-        
-        // Template selection
-        chooseTemplate: "अपना टेम्प्लेट चुनें",
-        templateDescription: "एक रिज्यूमे टेम्प्लेट चुनें जो आपकी शैली से मेल खाता हो",
-        modernTemplate: "आधुनिक",
-        classicTemplate: "क्लासिक",
-        creativeTemplate: "रचनात्मक",
-        cleanLayout: "साफ लेआउट",
-        professionalLook: "पेशेवर रूप",
-        standOut: "अलग दिखें",
-        traditionalFormat: "पारंपरिक प्रारूप",
-        industryStandard: "उद्योग मानक",
-        timelessDesign: "कालातीत डिजाइन",
-        uniqueDesign: "अनोखा डिजाइन",
-        creativeFlair: "रचनात्मक स्वभाव",
-        memorableImpression: "यादगार छाप",
-        continueWithTemplate: "चयनित टेम्प्लेट के साथ जारी रखें",
-        
-        // Voice input screen
-        voiceInputTitle: "वॉइस इनपुट",
-        currentSection: "वर्तमान अनुभाग",
-        speakNaturally: "अपने बारे में स्वाभाविक रूप से बोलें",
-        recording: "रिकॉर्ड हो रहा है...",
-        stopRecording: "रिकॉर्डिंग बंद करें",
-        clearTranscription: "साफ़ करें",
-        confirmSection: "अनुभाग की पुष्टि करें",
-        nextSection: "अगला अनुभाग",
-        previousSection: "पिछला अनुभाग",
-        
-        // Sections
-        contactInformationSection: "संपर्क जानकारी",
-        contactDescription: "अपनी बुनियादी संपर्क जानकारी प्रदान करें",
-        professionalSummarySection: "व्यावसायिक सारांश",
-        summaryDescription: "अपनी व्यावसायिक पृष्ठभूमि और लक्ष्यों का वर्णन करें",
-        workExperienceDescription: "अपने कार्य इतिहास के बारे में बताएं",
-        educationDescription: "अपनी शैक्षणिक पृष्ठभूमि साझा करें",
-        skillsDescription: "अपने तकनीकी और सॉफ्ट स्किल्स की सूची बनाएं",
-        
-        // Export and review
-        reviewYourResume: "अपना रिज्यूमे समीक्षा करें",
-        reviewDescription: "अंतिम निर्यात से पहले अपने रिज्यूमे की समीक्षा और संपादन करें",
-        resumePreviewTitle: "रिज्यूमे पूर्वावलोकन",
-        editMode: "संपादन मोड",
-        exportOptions: "निर्यात विकल्प",
-        exportAsPDF: "PDF के रूप में निर्यात करें",
-        exportAsWord: "Word के रूप में निर्यात करें",
-        additionalDocuments: "अतिरिक्त दस्तावेज़",
-        uploadDocumentsHint: "अपने CV निर्यात के साथ संलग्न करने के लिए सिफारिशें, मार्कशीट, प्रमाण पत्र जैसे सहायक दस्तावेज़ अपलोड करें",
-        uploadFiles: "फाइलें अपलोड करें",
-        uploadHelp: "स्वीकृत: PDF, Word, छवियां • प्रति फाइल अधिकतम 10MB",
-        additionalDocuments: "अतिरिक्त दस्तावेज",
-        uploadDocuments: "दस्तावेज अपलोड करें",
-        uploadDocumentsDesc: "कवर लेटर, प्रमाणपत्र या अन्य सहायक दस्तावेज अपलोड करें",
-        
-        // Settings
-        settingsTitle: "सेटिंग्स",
-        appearance: "उपस्थिति",
-        themeMode: "थीम मोड",
-        lightTheme: "लाइट",
-        darkTheme: "डार्क",
-        accessibility: "पहुंच",
-        accessibilityMode: "पहुंच मोड",
-        normalAccessibility: "सामान्य",
-        deafAccessibility: "बहरे/सुनने में कठिनाई",
-        blindAccessibility: "अंधे/कम दृष्टि",
-        highContrastMode: "उच्च कंट्रास्ट मोड",
-        voiceSettings: "वॉइस सेटिंग्स",
-        voiceLanguage: "वॉइस रिकग्निशन भाषा (भाषिणी ASR)",
-        account: "खाता",
-        signOut: "साइन आउट",
-        
-        // Language modal
-        selectLanguageTitle: "भाषा चुनें",
-        hindi: "हिंदी",
-        english: "अंग्रेजी",
-        tamil: "तमिल",
-        telugu: "तेलुगु",
-        kannada: "कन्नड़",
-        malayalam: "मलयालम",
-        marathi: "मराठी",
-        gujarati: "गुजराती",
-        bengali: "बंगाली",
-        punjabi: "पंजाबी",
-        odia: "उड़िया",
-        assamese: "असमिया",
-        urdu: "उर्दू",
-        
-        // Status messages
-        processing: "प्रोसेसिंग...",
-        recordingStarted: "रिकॉर्डिंग शुरू हुई",
-        recordingStopped: "रिकॉर्डिंग बंद हुई",
-        transcribing: "ट्रांसक्राइब हो रहा है...",
-        generatingResume: "रिज्यूमे जेनरेट हो रहा है...",
-        resumeGenerated: "रिज्यूमे सफलतापूर्वक जेनरेट हुआ!",
-        errorOccurred: "एक त्रुटि हुई",
-        pleaseSpeak: "कृपया स्पष्ट रूप से बोलें",
-        microphoneAccess: "माइक्रोफ़ोन एक्सेस आवश्यक है",
-        
-        // Instructions and tips
-        voiceInputInstructions: "आपका भाषण यहाँ रियल-टाइम में दिखाई देगा",
-        exampleSpeech: "पूर्ण CV भाषण का उदाहरण:",
-        speakAboutEverything: "इन सभी के बारे में एक साथ बोलें:",
-        aiWillOrganize: "AI स्वचालित रूप से इसे उचित CV अनुभागों में निकालेगा और व्यवस्थित करेगा!",
-        oneRecordingTip: "रुकने या विषयों को अलग करने की जरूरत नहीं - बस सब कुछ के बारे में स्वाभाविक रूप से बोलें!",
-        treatAsIntroduction: "सुझाव: इसे किसी से व्यापक रूप से अपना परिचय देने की तरह मानें",
-        
-        // Form labels and placeholders
-        emailPlaceholder: "अपना ईमेल पता दर्ज करें",
-        passwordPlaceholder: "अपना पासवर्ड दर्ज करें",
-        fullNamePlaceholder: "अपना पूरा नाम दर्ज करें",
-        manualTextPlaceholder: "अपनी पूरी CV जानकारी यहाँ टाइप करें या पेस्ट करें...",
-        
-        // Application info
-        appVersion: "S4CV संस्करण 1.0.0",
-        smartVoiceResumeBuilder: "स्मार्ट वॉइस रिज्यूमे बिल्डर",
-        
-        // App Language Settings
-        appLanguageSettings: "ऐप भाषा",
-        interfaceLanguage: "इंटरफेस भाषा"
-        
-        // Main content
-        voiceResumeBuilder: "वॉइस रिज्यूमे बिल्डर",
-        selectLanguage: "भाषा चुनें",
-        autoDetectLanguage: "स्वतः भाषा पहचान",
-        startRecording: "रिकॉर्डिंग शुरू करें",
-        stopRecording: "रिकॉर्डिंग रोकें",
-        clear: "साफ़ करें",
-        copyText: "टेक्स्ट कॉपी करें",
-        nextStep: "अगला चरण",
-        
-        // Stats
-        resumesCreated: "बनाए गए रिज्यूमे",
-        languagesUsed: "उपयोग की गई भाषाएं",
-        accuracyRate: "सटीकता दर",
-        timeSaved: "बचाया गया समय",
-        
-        // Features
-        aiFeatures: "AI सुविधाएं",
-        webSocketASR: "वेबसॉकेट ASR",
-        realtimeTranscription: "रियल-टाइम स्ट्रीमिंग ट्रांसक्रिप्शन",
-        autoLanguageDetection: "स्वतः भाषा पहचान",
-        automaticallyDetects: "स्वतः बोली गई भाषा को पहचानता है",
-        languages: "भाषाएं",
-        multilingualSupport: "पूर्ण बहुभाषी समर्थन",
-        smartFormatting: "स्मार्ट फ़ॉर्मेटिंग",
-        aiPoweredFormatting: "AI-संचालित रिज्यूमे फ़ॉर्मेटिंग",
-        
-        // Quick Actions
-        quickActions: "त्वरित कार्य",
-        viewTemplates: "टेम्प्लेट देखें",
-        analytics: "विश्लेषण",
-        savedDrafts: "सहेजे गए ड्राफ़्ट",
-        exportOptions: "निर्यात विकल्प",
-        
-        // Recent Resumes
-        recentResumes: "हाल के रिज्यूमे",
-        edit: "संपादित करें",
-        download: "डाउनलोड",
-        createdIn: "में बनाया गया",
-        daysAgo: "दिन पहले",
-        weekAgo: "सप्ताह पहले",
-        
-        // Messages
-        languageSwitched: "भाषा बदली गई",
-        autoDetectEnabled: "स्वतः पहचान सक्षम। किसी भी समर्थित भाषा में बोलें।",
-        autoDetectDisabled: "स्वतः पहचान अक्षम। कृपया एक भाषा चुनें।",
-        failedToStartRecording: "रिकॉर्डिंग शुरू करने में विफल। कृपया माइक्रोफ़ोन अनुमति जांचें।",
-        transcriptionCleared: "ट्रांसक्रिप्शन साफ़ किया गया",
-        noTextToCopy: "कॉपी करने के लिए कोई टेक्स्ट नहीं",
-        textCopied: "टेक्स्ट क्लिपबोर्ड में कॉपी किया गया",
-        pleaseRecordContent: "कृपया पहले कुछ सामग्री रिकॉर्ड करें",
-        proceedingToNext: "अगले चरण में जा रहे हैं...",
-        languageDetected: "भाषा पहचानी गई",
-        confidence: "विश्वास",
-        languageChanged: "भाषा सफलतापूर्वक बदल दी गई"
-    },
-    // Add more languages as needed
-    ta: {
-        appName: "S4CV",
-        dashboard: "டாஷ்போர்டு",
-        settings: "அமைப்புகள்",
-        newResume: "புதிய ரெஸ்யூம்",
-        voiceResumeBuilder: "குரல் ரெஸ்யூம் உருவாக்கி",
-        selectLanguage: "மொழியைத் தேர்ந்தெடுக்கவும்",
-        startRecording: "பதிவு தொடங்கு",
-        stopRecording: "பதிவு நிறுத்து",
-        clear: "அழி",
-        copyText: "உரையை நகலெடு",
-        nextStep: "அடுத்த படி"
-    },
-    te: {
-        appName: "S4CV",
-        dashboard: "డాష్‌బోర్డ్",
-        settings: "సెట్టింగ్‌లు",
-        newResume: "కొత్త రెజ్యూమ్",
-        voiceResumeBuilder: "వాయిస్ రెజ్యూమ్ బిల్డర్",
-        selectLanguage: "భాషను ఎంచుకోండి",
-        startRecording: "రికార్డింగ్ ప్రారంభించు",
-        stopRecording: "రికార్డింగ్ ఆపు",
-        clear: "క్లియర్",
-        copyText: "టెక్స్ట్ కాపీ చేయండి",
-        nextStep: "తదుపరి దశ"
     }
 };
+
+
+// Dynamic translations cache (populated via Bhashini API)
+const dynamicTranslations = {};
+
+// Translation service instance
+let translationService = null;
+
+// Initialize translation service
+function initTranslationService() {
+    if (!translationService && typeof BhashiniTranslationService !== 'undefined') {
+        translationService = new BhashiniTranslationService();
+        console.log('✅ Bhashini Translation Service initialized');
+    }
+    return translationService;
+}
 
 // Function to get current language (defaults to English)
 function getCurrentLanguage() {
@@ -551,26 +286,128 @@ function getCurrentLanguage() {
 // Function to get translation for a key
 function t(key) {
     const lang = getCurrentLanguage();
-    return translations[lang]?.[key] || translations['en'][key] || key;
+    
+    // If language is English, return from base translations
+    if (lang === 'en') {
+        return baseTranslations.en[key] || key;
+    }
+    
+    // Check dynamic translations cache
+    if (dynamicTranslations[lang]?.[key]) {
+        return dynamicTranslations[lang][key];
+    }
+    
+    // Fallback to English if translation not available
+    return baseTranslations.en[key] || key;
 }
 
 // Function to update all translatable elements on the page
-function updatePageTranslations() {
+async function updatePageTranslations() {
     const lang = getCurrentLanguage();
     console.log('Updating translations to:', lang);
+    
+    // If language is English, just update from base translations
+    if (lang === 'en') {
+        updateElementsFromCache('en');
+        return;
+    }
+    
+    // Initialize translation service
+    const service = initTranslationService();
+    if (!service) {
+        console.warn('Translation service not available, using English');
+        updateElementsFromCache('en');
+        return;
+    }
+    
+    // Show loading indicator
+    showTranslationLoading(true);
+    
+    try {
+        // Collect all unique texts to translate
+        const textsToTranslate = new Set();
+        const translationKeys = [];
+        
+        // Get all translation keys from base English translations
+        for (const key in baseTranslations.en) {
+            textsToTranslate.add(baseTranslations.en[key]);
+            translationKeys.push(key);
+        }
+        
+        // Initialize cache for this language if not exists
+        if (!dynamicTranslations[lang]) {
+            dynamicTranslations[lang] = {};
+        }
+        
+        // Translate all texts that aren't cached
+        const textsArray = Array.from(textsToTranslate);
+        const translationsNeeded = [];
+        const keysNeeded = [];
+        
+        for (const key of translationKeys) {
+            const text = baseTranslations.en[key];
+            if (!dynamicTranslations[lang][key]) {
+                translationsNeeded.push(text);
+                keysNeeded.push(key);
+            }
+        }
+        
+        if (translationsNeeded.length > 0) {
+            console.log(`Translating ${translationsNeeded.length} texts to ${lang}...`);
+            
+            // Translate in batches to avoid overwhelming the API
+            const batchSize = 10;
+            for (let i = 0; i < translationsNeeded.length; i += batchSize) {
+                const batch = translationsNeeded.slice(i, i + batchSize);
+                const batchKeys = keysNeeded.slice(i, i + batchSize);
+                
+                const translatedBatch = await service.translateBatch(batch, 'en', lang);
+                
+                // Cache the translations
+                batchKeys.forEach((key, index) => {
+                    dynamicTranslations[lang][key] = translatedBatch[index];
+                });
+                
+                // Update UI progressively
+                updateElementsFromCache(lang);
+            }
+            
+            console.log(`✅ Translation complete for ${lang}`);
+        }
+        
+        // Update all elements with translated text
+        updateElementsFromCache(lang);
+        
+    } catch (error) {
+        console.error('Translation error:', error);
+        // Fallback to English on error
+        updateElementsFromCache('en');
+    } finally {
+        showTranslationLoading(false);
+    }
+}
+
+// Helper function to update elements from cache
+function updateElementsFromCache(lang) {
+    const translations = lang === 'en' ? baseTranslations.en : dynamicTranslations[lang];
+    
+    if (!translations) {
+        console.warn(`No translations available for ${lang}`);
+        return;
+    }
     
     // Update all elements with data-translate attribute
     document.querySelectorAll('[data-translate]').forEach(element => {
         const key = element.getAttribute('data-translate');
-        if (translations[lang]?.[key]) {
+        if (translations[key]) {
             // Handle elements with nested structure (preserve icons)
             const iconElement = element.querySelector('span');
             if (iconElement && element.children.length === 1 && iconElement.textContent.length <= 2) {
                 // Keep the icon and update text after it
-                element.innerHTML = iconElement.outerHTML + ' ' + translations[lang][key];
+                element.innerHTML = iconElement.outerHTML + ' ' + translations[key];
             } else if (element.innerHTML.includes('<strong>') || element.innerHTML.includes('<span>')) {
                 // Handle complex HTML content - replace only the text parts
-                const translation = translations[lang][key];
+                const translation = translations[key];
                 if (key === 'speakAboutAll') {
                     element.innerHTML = `<strong>🗣️ ${translation}</strong>`;
                 } else if (key === 'aiProcessing') {
@@ -579,7 +416,7 @@ function updatePageTranslations() {
                     element.textContent = translation;
                 }
             } else {
-                element.textContent = translations[lang][key];
+                element.textContent = translations[key];
             }
         }
     });
@@ -610,15 +447,15 @@ function updatePageTranslations() {
     for (const [selector, keys] of Object.entries(updates)) {
         if (Array.isArray(keys)) {
             document.querySelectorAll(selector).forEach((el, index) => {
-                if (keys[index] && translations[lang]?.[keys[index]]) {
-                    el.textContent = translations[lang][keys[index]];
+                if (keys[index] && translations[keys[index]]) {
+                    el.textContent = translations[keys[index]];
                 }
             });
         } else {
             const elements = document.querySelectorAll(selector);
             elements.forEach(el => {
-                if (translations[lang]?.[keys]) {
-                    el.textContent = translations[lang][keys];
+                if (translations[keys]) {
+                    el.textContent = translations[keys];
                 }
             });
         }
@@ -631,6 +468,33 @@ function updatePageTranslations() {
     
     // Update document language attribute
     document.documentElement.lang = lang;
+}
+
+// Show/hide translation loading indicator
+function showTranslationLoading(show) {
+    let indicator = document.getElementById('translationLoadingIndicator');
+    
+    if (show && !indicator) {
+        // Create loading indicator
+        indicator = document.createElement('div');
+        indicator.id = 'translationLoadingIndicator';
+        indicator.style.cssText = `
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            background: rgba(99, 102, 241, 0.9);
+            color: white;
+            padding: 12px 20px;
+            border-radius: 8px;
+            font-size: 14px;
+            z-index: 10000;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+        `;
+        indicator.textContent = '🌐 Translating...';
+        document.body.appendChild(indicator);
+    } else if (!show && indicator) {
+        indicator.remove();
+    }
 }
 
 function getConnectionStatusKey() {
@@ -654,5 +518,12 @@ function updateButtonWithIcon(selector, icon, text) {
 
 // Export for use in other files
 if (typeof module !== 'undefined' && module.exports) {
-    module.exports = { translations, t, updatePageTranslations, getCurrentLanguage };
+    module.exports = { 
+        baseTranslations, 
+        dynamicTranslations,
+        t, 
+        updatePageTranslations, 
+        getCurrentLanguage,
+        initTranslationService
+    };
 }
