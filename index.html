@@ -745,19 +745,49 @@
                             
                             <!-- Manual Language Selector (shown when auto-detect is OFF) -->
                             <div id="manualLanguageSelector" style="display: block;">
-                                <label for="manualLanguageSelect" style="margin-right: 0.5rem; color: #646464;">Voice Input Language:</label>
-                                <select id="manualLanguageSelect" class="form-control" style="width: 220px; display: inline-block;">
-                                    <option value="en" selected>English</option>
-                                    <option value="hi">Hindi (हिंदी)</option>
-                                    <option value="ta">Tamil (தமிழ்)</option>
-                                    <option value="te">Telugu (తెలుగు)</option>
-                                    <option value="kn">Kannada (ಕನ್ನಡ)</option>
-                                    <option value="ml">Malayalam (മലയാളം)</option>
-                                    <option value="mr">Marathi (मराठी)</option>
-                                    <option value="gu">Gujarati (ગુજરાતી)</option>
-                                    <option value="bn">Bengali (বাংলা)</option>
-                                    <option value="pa">Punjabi (ਪੰਜਾਬੀ)</option>
-                                </select>
+                                <p style="margin-bottom: 1rem; color: #646464; font-weight: 500;">Select Voice Input Language:</p>
+                                <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 0.75rem; max-width: 800px; margin: 0 auto;">
+                                    <button class="language-select-btn" data-lang="en" style="padding: 0.75rem 1rem; border: 2px solid #dcdcdc; border-radius: 8px; background: #ffffff; cursor: pointer; transition: all 0.3s ease; font-size: 0.9rem;">
+                                        <span style="display: block; font-weight: 600;">English</span>
+                                        <span style="display: block; font-size: 0.75rem; color: #888;">🇺🇸 EN</span>
+                                    </button>
+                                    <button class="language-select-btn" data-lang="hi" style="padding: 0.75rem 1rem; border: 2px solid #dcdcdc; border-radius: 8px; background: #ffffff; cursor: pointer; transition: all 0.3s ease; font-size: 0.9rem;">
+                                        <span style="display: block; font-weight: 600;">हिंदी</span>
+                                        <span style="display: block; font-size: 0.75rem; color: #888;">🇮🇳 HI</span>
+                                    </button>
+                                    <button class="language-select-btn" data-lang="ta" style="padding: 0.75rem 1rem; border: 2px solid #dcdcdc; border-radius: 8px; background: #ffffff; cursor: pointer; transition: all 0.3s ease; font-size: 0.9rem;">
+                                        <span style="display: block; font-weight: 600;">தமிழ்</span>
+                                        <span style="display: block; font-size: 0.75rem; color: #888;">🇮🇳 TA</span>
+                                    </button>
+                                    <button class="language-select-btn" data-lang="te" style="padding: 0.75rem 1rem; border: 2px solid #dcdcdc; border-radius: 8px; background: #ffffff; cursor: pointer; transition: all 0.3s ease; font-size: 0.9rem;">
+                                        <span style="display: block; font-weight: 600;">తెలుగు</span>
+                                        <span style="display: block; font-size: 0.75rem; color: #888;">🇮🇳 TE</span>
+                                    </button>
+                                    <button class="language-select-btn" data-lang="kn" style="padding: 0.75rem 1rem; border: 2px solid #dcdcdc; border-radius: 8px; background: #ffffff; cursor: pointer; transition: all 0.3s ease; font-size: 0.9rem;">
+                                        <span style="display: block; font-weight: 600;">ಕನ್ನಡ</span>
+                                        <span style="display: block; font-size: 0.75rem; color: #888;">🇮🇳 KN</span>
+                                    </button>
+                                    <button class="language-select-btn" data-lang="ml" style="padding: 0.75rem 1rem; border: 2px solid #dcdcdc; border-radius: 8px; background: #ffffff; cursor: pointer; transition: all 0.3s ease; font-size: 0.9rem;">
+                                        <span style="display: block; font-weight: 600;">മലയാളം</span>
+                                        <span style="display: block; font-size: 0.75rem; color: #888;">🇮🇳 ML</span>
+                                    </button>
+                                    <button class="language-select-btn" data-lang="mr" style="padding: 0.75rem 1rem; border: 2px solid #dcdcdc; border-radius: 8px; background: #ffffff; cursor: pointer; transition: all 0.3s ease; font-size: 0.9rem;">
+                                        <span style="display: block; font-weight: 600;">मराठी</span>
+                                        <span style="display: block; font-size: 0.75rem; color: #888;">🇮🇳 MR</span>
+                                    </button>
+                                    <button class="language-select-btn" data-lang="gu" style="padding: 0.75rem 1rem; border: 2px solid #dcdcdc; border-radius: 8px; background: #ffffff; cursor: pointer; transition: all 0.3s ease; font-size: 0.9rem;">
+                                        <span style="display: block; font-weight: 600;">ગુજરાતી</span>
+                                        <span style="display: block; font-size: 0.75rem; color: #888;">🇮🇳 GU</span>
+                                    </button>
+                                    <button class="language-select-btn" data-lang="bn" style="padding: 0.75rem 1rem; border: 2px solid #dcdcdc; border-radius: 8px; background: #ffffff; cursor: pointer; transition: all 0.3s ease; font-size: 0.9rem;">
+                                        <span style="display: block; font-weight: 600;">বাংলা</span>
+                                        <span style="display: block; font-size: 0.75rem; color: #888;">🇮🇳 BN</span>
+                                    </button>
+                                    <button class="language-select-btn" data-lang="pa" style="padding: 0.75rem 1rem; border: 2px solid #dcdcdc; border-radius: 8px; background: #ffffff; cursor: pointer; transition: all 0.3s ease; font-size: 0.9rem;">
+                                        <span style="display: block; font-weight: 600;">ਪੰਜਾਬੀ</span>
+                                        <span style="display: block; font-size: 0.75rem; color: #888;">🇮🇳 PA</span>
+                                    </button>
+                                </div>
                             </div>
                         </div>
                     </div>

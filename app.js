@@ -1602,12 +1602,8 @@ class VoiceCVApp {
         // Ensure manual language selector is visible on initialization
         setTimeout(() => {
             const manualSelector = document.getElementById('manualLanguageSelector');
-            const manualLanguageSelect = document.getElementById('manualLanguageSelect');
             if (manualSelector) {
                 manualSelector.style.display = 'block';
-            }
-            if (manualLanguageSelect) {
-                manualLanguageSelect.value = this.currentLanguage;
             }
             console.log('✅ Manual language selector initialized and visible');
         }, 100);
@@ -1686,49 +1682,65 @@ class VoiceCVApp {
             autoDetectToggle.addEventListener('click', () => this.toggleAutoDetect());
         }
         
-        // Manual language selector - ONLY changes ASR voice input language
-        const manualLanguageSelect = document.getElementById('manualLanguageSelect');
-        console.log('Setting up language selector, element found:', !!manualLanguageSelect);
+        // Manual language selector buttons - ONLY changes ASR voice input language
+        const languageButtons = document.querySelectorAll('.language-select-btn');
+        console.log('Setting up language selector buttons, found:', languageButtons.length);
         
-        if (manualLanguageSelect) {
-            // Remove any existing listeners first
-            const newSelect = manualLanguageSelect.cloneNode(true);
-            manualLanguageSelect.parentNode.replaceChild(newSelect, manualLanguageSelect);
-            
-            newSelect.addEventListener('change', (e) => {
-                console.log('Language selector changed to:', e.target.value);
-                
-                // Only change the ASR language, not the UI/page language
-                this.currentLanguage = e.target.value;
-                
-                // Update the language indicator
-                const indicator = document.getElementById('currentLangIndicator');
-                if (indicator && !this.autoDetectEnabled) {
-                    const selectedOption = e.target.options[e.target.selectedIndex];
-                    const langName = selectedOption.text;
-                    indicator.textContent = `${langName}`;
-                    console.log('Updated indicator to:', langName);
-                }
-                
-                // Pre-load Bhashini pipeline for the selected language
-                if (this.bhashiniService) {
-                    this.bhashiniService.getPipelineConfig(this.currentLanguage)
-                        .then(() => {
-                            console.log(`✅ ASR pipeline configured for ${this.currentLanguage}`);
-                        })
-                        .catch(error => {
-                            console.error('❌ Failed to configure ASR pipeline:', error);
-                        });
-                }
-                
-                // Show confirmation that ONLY voice input language changed
-                const selectedText = e.target.options[e.target.selectedIndex].text;
-                this.showStatusMessage(`Voice input language set to ${selectedText}`, 'success');
+        if (languageButtons.length > 0) {
+            languageButtons.forEach(button => {
+                button.addEventListener('click', (e) => {
+                    e.preventDefault();
+                    const langCode = button.getAttribute('data-lang');
+                    const langName = button.querySelector('span').textContent;
+                    
+                    console.log('Language button clicked:', langCode, langName);
+                    
+                    // Only change the ASR language, not the UI/page language
+                    this.currentLanguage = langCode;
+                    
+                    // Update button states - remove 'selected' from all, add to clicked
+                    languageButtons.forEach(btn => {
+                        btn.style.borderColor = '#dcdcdc';
+                        btn.style.background = '#ffffff';
+                        btn.style.transform = 'scale(1)';
+                    });
+                    button.style.borderColor = '#000000';
+                    button.style.background = '#f0f0f0';
+                    button.style.transform = 'scale(1.05)';
+                    
+                    // Update the language indicator
+                    const indicator = document.getElementById('currentLangIndicator');
+                    if (indicator && !this.autoDetectEnabled) {
+                        indicator.textContent = langName;
+                        console.log('Updated indicator to:', langName);
+                    }
+                    
+                    // Pre-load Bhashini pipeline for the selected language
+                    if (this.bhashiniService) {
+                        this.bhashiniService.getPipelineConfig(this.currentLanguage)
+                            .then(() => {
+                                console.log(`✅ ASR pipeline configured for ${this.currentLanguage}`);
+                            })
+                            .catch(error => {
+                                console.error('❌ Failed to configure ASR pipeline:', error);
+                            });
+                    }
+                    
+                    // Show confirmation that ONLY voice input language changed
+                    this.showStatusMessage(`Voice input language set to ${langName}`, 'success');
+                });
             });
             
-            console.log('✅ Language selector event listener attached');
+            // Set initial selected state for English button
+            const englishBtn = document.querySelector('.language-select-btn[data-lang="en"]');
+            if (englishBtn) {
+                englishBtn.style.borderColor = '#000000';
+                englishBtn.style.background = '#f0f0f0';
+            }
+            
+            console.log('✅ Language selector buttons event listeners attached');
         } else {
-            console.error('❌ Could not find manualLanguageSelect element!');
+            console.error('❌ Could not find language selector buttons!');
         }
         
         // Add text input mode toggle

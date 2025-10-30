@@ -9,21 +9,14 @@
         // Export to PDF
         async exportPDF(data, filename) {
             try {
-                // Check if data contains non-Latin text and warn user
+                // Check if data contains non-Latin text
                 const dataStr = JSON.stringify(data);
                 const hasUnicode = /[^\u0000-\u007F]/.test(dataStr);
                 
                 if (hasUnicode) {
-                    const userConfirmed = confirm(
-                        'Your resume contains non-English characters.\n\n' +
-                        '⚠️ PDF export has limited Unicode support and may show garbled text.\n\n' +
-                        '✅ For best results with non-English text, use Word export instead.\n\n' +
-                        'Continue with PDF export anyway?'
-                    );
-                    
-                    if (!userConfirmed) {
-                        return false;
-                    }
+                    // For Unicode content, use HTML-to-Canvas-to-PDF method
+                    console.log('🌏 Unicode content detected - using HTML canvas method for PDF export');
+                    return await this.exportPDFViaCanvas(data, filename);
                 }
                 
                 // Load jsPDF if needed
@@ -425,6 +418,188 @@
             if (bytes < 1024) return bytes + ' B';
             if (bytes < 1024 * 1024) return (bytes / 1024).toFixed(1) + ' KB';
             return (bytes / (1024 * 1024)).toFixed(1) + ' MB';
+        },
+        
+        // Export PDF via HTML Canvas (supports Unicode perfectly)
+        async exportPDFViaCanvas(data, filename) {
+            try {
+                // Load required libraries
+                await this.loadJsPDF();
+                await this.loadHtml2Canvas();
+                
+                const { jsPDF } = window.jspdf;
+                const html2canvas = window.html2canvas;
+                
+                // Create a temporary container for the HTML
+                const container = document.createElement('div');
+                container.style.position = 'absolute';
+                container.style.left = '-9999px';
+                container.style.width = '794px'; // A4 width in pixels at 96 DPI
+                container.style.padding = '40px';
+                container.style.background = 'white';
+                container.style.fontFamily = 'Arial, sans-serif';
+                container.style.fontSize = '14px';
+                container.style.lineHeight = '1.6';
+                container.style.color = 'black';
+                document.body.appendChild(container);
+                
+                // Build HTML content
+                let html = '';
+                
+                // NAME
+                const name = data.personalInfo?.fullName || data.contact?.name || 'Resume';
+                html += `<h1 style="font-size: 28px; text-align: center; border-bottom: 3px solid black; padding-bottom: 10px; margin-bottom: 20px;">${this.escape(name.toUpperCase())}</h1>`;
+                
+                // CONTACT
+                const contact = data.personalInfo || data.contact;
+                if (contact) {
+                    html += '<h2 style="font-size: 18px; border-bottom: 2px solid black; padding-bottom: 5px; margin-top: 20px; margin-bottom: 10px;">CONTACT</h2>';
+                    if (contact.email) html += '<p style="margin: 5px 0;">Email: ' + this.escape(contact.email) + '</p>';
+                    if (contact.phone) html += '<p style="margin: 5px 0;">Phone: ' + this.escape(contact.phone) + '</p>';
+                    if (contact.location) html += '<p style="margin: 5px 0;">Location: ' + this.escape(contact.location) + '</p>';
+                }
+                
+                // SUMMARY
+                if (data.professionalSummary || data.summary) {
+                    html += '<h2 style="font-size: 18px; border-bottom: 2px solid black; padding-bottom: 5px; margin-top: 20px; margin-bottom: 10px;">PROFESSIONAL SUMMARY</h2>';
+                    html += '<p style="margin: 5px 0;">' + this.escape(data.professionalSummary || data.summary) + '</p>';
+                }
+                
+                // WORK EXPERIENCE
+                const exp = data.workExperience || data.experience || [];
+                if (exp.length > 0) {
+                    html += '<h2 style="font-size: 18px; border-bottom: 2px solid black; padding-bottom: 5px; margin-top: 20px; margin-bottom: 10px;">WORK EXPERIENCE</h2>';
+                    exp.forEach(job => {
+                        if (job.jobTitle || job.job_title || job.position) {
+                            html += '<h3 style="font-size: 16px; margin: 10px 0 5px 0;">' + this.escape(job.jobTitle || job.job_title || job.position) + '</h3>';
+                        }
+                        if (job.company) {
+                            let line = job.company;
+                            if (job.duration) line += ' | ' + job.duration;
+                            html += '<p style="margin: 3px 0; font-weight: bold;">' + this.escape(line) + '</p>';
+                        }
+                        if (job.description) {
+                            html += '<p style="margin: 5px 0;">' + this.escape(job.description) + '</p>';
+                        }
+                        if (job.responsibilities && job.responsibilities.length > 0) {
+                            html += '<ul style="margin: 5px 0; padding-left: 20px;">';
+                            job.responsibilities.forEach(r => {
+                                html += '<li style="margin: 3px 0;">' + this.escape(r) + '</li>';
+                            });
+                            html += '</ul>';
+                        }
+                    });
+                }
+                
+                // EDUCATION
+                const edu = data.education || [];
+                if (edu.length > 0) {
+                    html += '<h2 style="font-size: 18px; border-bottom: 2px solid black; padding-bottom: 5px; margin-top: 20px; margin-bottom: 10px;">EDUCATION</h2>';
+                    edu.forEach(e => {
+                        let degreeText = e.degree || '';
+                        if (e.fieldOfStudy || e.field_of_study || e.field) {
+                            degreeText += ' in ' + (e.fieldOfStudy || e.field_of_study || e.field);
+                        }
+                        if (degreeText) html += '<h3 style="font-size: 16px; margin: 10px 0 5px 0;">' + this.escape(degreeText) + '</h3>';
+                        if (e.institution) {
+                            let instText = e.institution;
+                            if (e.year) instText += ' | ' + e.year;
+                            html += '<p style="margin: 3px 0; font-weight: bold;">' + this.escape(instText) + '</p>';
+                        }
+                    });
+                }
+                
+                // SKILLS
+                const skills = data.skills?.technical || data.skills || [];
+                if (skills.length > 0) {
+                    html += '<h2 style="font-size: 18px; border-bottom: 2px solid black; padding-bottom: 5px; margin-top: 20px; margin-bottom: 10px;">SKILLS</h2>';
+                    html += '<p style="margin: 5px 0;">' + skills.map(s => this.escape(s)).join(', ') + '</p>';
+                }
+                
+                // LANGUAGES
+                if (data.languages && data.languages.length > 0) {
+                    html += '<h2 style="font-size: 18px; border-bottom: 2px solid black; padding-bottom: 5px; margin-top: 20px; margin-bottom: 10px;">LANGUAGES</h2>';
+                    data.languages.forEach(lang => {
+                        html += '<p style="margin: 5px 0;">' + this.escape(lang.name) + ' - ' + this.escape(lang.proficiency) + '</p>';
+                    });
+                }
+                
+                container.innerHTML = html;
+                
+                // Convert HTML to canvas
+                console.log('📷 Converting HTML to canvas...');
+                const canvas = await html2canvas(container, {
+                    scale: 2, // Higher quality
+                    useCORS: true,
+                    logging: false,
+                    backgroundColor: '#ffffff'
+                });
+                
+                // Remove temporary container
+                document.body.removeChild(container);
+                
+                // Convert canvas to PDF
+                console.log('📝 Converting canvas to PDF...');
+                const imgData = canvas.toDataURL('image/png');
+                const pdf = new jsPDF({
+                    orientation: 'portrait',
+                    unit: 'mm',
+                    format: 'a4'
+                });
+                
+                // Calculate dimensions
+                const pdfWidth = pdf.internal.pageSize.getWidth();
+                const pdfHeight = pdf.internal.pageSize.getHeight();
+                const imgWidth = canvas.width;
+                const imgHeight = canvas.height;
+                const ratio = Math.min(pdfWidth / imgWidth, pdfHeight / imgHeight);
+                const imgX = 0;
+                const imgY = 0;
+                const imgScaledWidth = imgWidth * ratio;
+                const imgScaledHeight = imgHeight * ratio;
+                
+                // Add image to PDF
+                pdf.addImage(imgData, 'PNG', imgX, imgY, imgScaledWidth, imgScaledHeight);
+                
+                // Add additional pages if content is long
+                if (imgScaledHeight > pdfHeight) {
+                    let heightLeft = imgScaledHeight - pdfHeight;
+                    let position = -pdfHeight;
+                    
+                    while (heightLeft > 0) {
+                        pdf.addPage();
+                        pdf.addImage(imgData, 'PNG', imgX, position, imgScaledWidth, imgScaledHeight);
+                        heightLeft -= pdfHeight;
+                        position -= pdfHeight;
+                    }
+                }
+                
+                // Save PDF
+                pdf.save(filename || 'resume.pdf');
+                console.log('✅ PDF export completed successfully with Unicode support');
+                return true;
+                
+            } catch (error) {
+                console.error('Canvas PDF Export Error:', error);
+                alert('PDF Export Failed: ' + error.message + '\n\nTry using Word export instead.');
+                return false;
+            }
+        },
+        
+        // Load html2canvas library
+        loadHtml2Canvas() {
+            return new Promise((resolve, reject) => {
+                if (window.html2canvas) {
+                    resolve();
+                    return;
+                }
+                
+                const script = document.createElement('script');
+                script.src = 'https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js';
+                script.onload = resolve;
+                script.onerror = () => reject(new Error('Failed to load html2canvas'));
+                document.head.appendChild(script);
+            });
         }
     };
     
