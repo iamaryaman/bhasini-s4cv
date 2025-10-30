@@ -6,7 +6,7 @@
 class OllamaOptimizationService {
     constructor() {
         // Configure your Ollama server URL here
-        this.ollamaBaseURL = 'http://YOUR_SERVER_IP:11434'; // Replace with your Ollama server URL
+        this.ollamaBaseURL = 'https://sherell-baptismal-actorly.ngrok-free.dev/'; // Replace with your Ollama server URL
         this.modelName = 'qwen2.5:7b'; // Or your preferred model
         this.isOptimizing = false;
         this.lastError = null;

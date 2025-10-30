@@ -9,6 +9,7 @@ class VoiceCVApp {
         this.recognition = null;
         // New properties for Bhashini integration
         this.bhashiniService = new BhashiniService();
+        this.aldService = new BhashiniALDService(); // ALD service for language detection
         this.mediaRecorder = null;
         this.audioChunks = [];
         this.audioStream = null;
@@ -22,6 +23,7 @@ class VoiceCVApp {
             skills: {}
         };
         this.currentLanguage = 'hi'; // Default to Hindi for Bhashini
+        this.autoDetectEnabled = false; // ALD toggle state (OFF by default)
         this.user = null;
         this.uploadedDocuments = [];
         
@@ -1591,7 +1593,8 @@ class VoiceCVApp {
     initializeSingleInputMode() {
         // Initialize Bhashini service for audio transcription
         this.bhashiniService = new BhashiniService();
-        this.autoDetectEnabled = true;
+        this.aldService = new BhashiniALDService(); // Initialize ALD service
+        this.autoDetectEnabled = false; // ALD OFF by default
         this.finalText = '';
         this.generatedCVData = null;
         this.currentLanguage = 'hi'; // Default to Hindi
@@ -2111,8 +2114,35 @@ class VoiceCVApp {
     }
     
     toggleAutoDetect() {
-        // Placeholder for auto-detect functionality
-        console.log('Auto-detect toggled');
+        this.autoDetectEnabled = !this.autoDetectEnabled;
+        
+        const toggle = document.getElementById('autoDetectToggle');
+        const indicator = document.getElementById('currentLangIndicator');
+        
+        if (toggle) {
+            if (this.autoDetectEnabled) {
+                toggle.classList.add('active');
+            } else {
+                toggle.classList.remove('active');
+            }
+        }
+        
+        if (indicator) {
+            if (this.autoDetectEnabled) {
+                indicator.textContent = '🔄 Auto-detect: ON';
+                indicator.style.background = '#10b981'; // Green
+            } else {
+                const langName = this.aldService.languageNames[this.currentLanguage] || this.currentLanguage;
+                indicator.textContent = `${langName}`;
+                indicator.style.background = '#6366f1'; // Blue
+            }
+        }
+        
+        console.log(`🎤 ALD: Auto-detect ${this.autoDetectEnabled ? 'ENABLED' : 'DISABLED'}`);
+        this.showStatusMessage(
+            `Language auto-detection ${this.autoDetectEnabled ? 'enabled' : 'disabled'}`,
+            'info'
+        );
     }
     
     initializeWaveform() {
@@ -2278,12 +2308,54 @@ class VoiceCVApp {
             const audioBase64 = await AudioUtils.blobToBase64(wavBlob);
             console.log('Base64 audio prepared:', audioBase64.length, 'characters');
             
-            // Get transcription from Bhashini
-            this.showStatusMessage('🔄 Transcribing with Bhashini ASR...', 'info');
-            const transcription = await this.bhashiniService.transcribeAudio(
-                this.currentLanguage, 
-                audioBase64
-            );
+            // === ALD INTEGRATION: Detect language first if auto-detect is ON ===
+            let languageToUse = this.currentLanguage;
+            let transcription = '';
+            
+            if (this.autoDetectEnabled) {
+                try {
+                    this.showStatusMessage('🔄 Detecting language from audio (testing multiple languages)...', 'info');
+                    const detectedLang = await this.aldService.detectLanguageFromAudio(audioBase64);
+                    
+                    // Override current language with detected language
+                    languageToUse = detectedLang.languageCode;
+                    this.currentLanguage = languageToUse;
+                    
+                    // Use the transcription from ALD (already transcribed during detection)
+                    transcription = detectedLang.transcription;
+                    
+                    // Update UI indicator
+                    const indicator = document.getElementById('currentLangIndicator');
+                    if (indicator) {
+                        indicator.textContent = `✅ Detected: ${detectedLang.languageName} (${(detectedLang.confidence * 100).toFixed(0)}%)`;
+                        indicator.style.background = '#10b981'; // Green for success
+                    }
+                    
+                    this.showStatusMessage(
+                        `✅ Detected ${detectedLang.languageName} (${(detectedLang.confidence * 100).toFixed(0)}% confidence)`,
+                        'success'
+                    );
+                    
+                    console.log(`🎤 ALD: Using ${languageToUse} with transcription already obtained`);
+                    
+                } catch (aldError) {
+                    console.error('🎤 ALD failed, falling back to current language:', aldError);
+                    this.showStatusMessage(
+                        `⚠️ Language detection failed, using ${this.aldService.languageNames[languageToUse] || languageToUse}`,
+                        'warning'
+                    );
+                    // Fall through to regular ASR below
+                }
+            }
+            
+            // If ALD didn't provide transcription, get it from regular ASR
+            if (!transcription || transcription.trim().length === 0) {
+                this.showStatusMessage(`🔄 Transcribing in ${this.aldService.languageNames[languageToUse] || languageToUse}...`, 'info');
+                transcription = await this.bhashiniService.transcribeAudio(
+                    languageToUse, 
+                    audioBase64
+                );
+            }
             
             console.log('Transcription result:', transcription);
             
