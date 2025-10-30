@@ -1,0 +1,351 @@
+/* Bhashini TTS UI Styles */
+
+/* TTS Button Base Styles */
+.tts-btn {
+    position: relative;
+    overflow: hidden;
+    transition: all 0.3s ease;
+}
+
+.tts-btn.speaking {
+    animation: pulse-speaking 1.5s infinite;
+    background: linear-gradient(135deg, #10b981 0%, #059669 100%) !important;
+    border-color: #10b981 !important;
+}
+
+@keyframes pulse-speaking {
+    0%, 100% {
+        opacity: 1;
+        transform: scale(1);
+    }
+    50% {
+        opacity: 0.8;
+        transform: scale(1.05);
+    }
+}
+
+.tts-btn:disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+}
+
+/* Floating TTS Button */
+.tts-floating-btn {
+    position: fixed;
+    bottom: 30px;
+    right: 30px;
+    z-index: 9999;
+}
+
+.tts-floating-trigger {
+    width: 60px;
+    height: 60px;
+    border-radius: 50%;
+    background: linear-gradient(135deg, #6366f1 0%, #8b5cf6 100%);
+    border: none;
+    color: white;
+    font-size: 1.5rem;
+    cursor: pointer;
+    box-shadow: 0 8px 25px rgba(99, 102, 241, 0.4);
+    transition: all 0.3s ease;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.tts-floating-trigger:hover {
+    transform: translateY(-3px) scale(1.05);
+    box-shadow: 0 12px 35px rgba(99, 102, 241, 0.5);
+}
+
+.tts-floating-trigger:active {
+    transform: translateY(-1px) scale(0.98);
+}
+
+.tts-floating-trigger.speaking {
+    background: linear-gradient(135deg, #10b981 0%, #059669 100%);
+    animation: pulse-speaking 1.5s infinite;
+}
+
+.tts-icon {
+    font-size: 1.8rem;
+    line-height: 1;
+}
+
+/* Floating Menu */
+.tts-floating-menu {
+    position: absolute;
+    bottom: 75px;
+    right: 0;
+    background: #1a1d35;
+    border: 2px solid rgba(99, 102, 241, 0.3);
+    border-radius: 12px;
+    padding: 8px;
+    min-width: 200px;
+    box-shadow: 0 8px 25px rgba(0, 0, 0, 0.3);
+    transition: all 0.3s ease;
+    transform-origin: bottom right;
+}
+
+.tts-floating-menu.hidden {
+    opacity: 0;
+    visibility: hidden;
+    transform: scale(0.8);
+    pointer-events: none;
+}
+
+.tts-menu-item {
+    width: 100%;
+    padding: 12px 16px;
+    background: transparent;
+    border: none;
+    color: #f1f5f9;
+    text-align: left;
+    cursor: pointer;
+    border-radius: 8px;
+    transition: all 0.2s ease;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    font-size: 0.95rem;
+    margin-bottom: 4px;
+}
+
+.tts-menu-item:last-child {
+    margin-bottom: 0;
+}
+
+.tts-menu-item:hover {
+    background: rgba(99, 102, 241, 0.2);
+    transform: translateX(-2px);
+}
+
+.tts-menu-item:active {
+    background: rgba(99, 102, 241, 0.3);
+}
+
+.tts-menu-item span:first-child {
+    font-size: 1.2rem;
+}
+
+/* TTS Notifications */
+.tts-notification {
+    animation: slideInRight 0.3s ease-out;
+    font-weight: 500;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+}
+
+@keyframes slideInRight {
+    from {
+        transform: translateX(100%);
+        opacity: 0;
+    }
+    to {
+        transform: translateX(0);
+        opacity: 1;
+    }
+}
+
+@keyframes slideOutRight {
+    from {
+        transform: translateX(0);
+        opacity: 1;
+    }
+    to {
+        transform: translateX(100%);
+        opacity: 0;
+    }
+}
+
+/* Header TTS Button */
+#headerTTSBtn {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+#headerTTSBtn span[aria-hidden="true"] {
+    font-size: 1.2rem;
+}
+
+/* Speaking indicator overlay */
+.tts-speaking-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: rgba(10, 14, 39, 0.5);
+    z-index: 9998;
+    pointer-events: none;
+    opacity: 0;
+    transition: opacity 0.3s ease;
+}
+
+.tts-speaking-overlay.active {
+    opacity: 1;
+}
+
+/* Accessibility - High Contrast Mode */
+@media (prefers-contrast: high) {
+    .tts-floating-trigger {
+        border: 2px solid white;
+    }
+    
+    .tts-floating-menu {
+        border: 2px solid white;
+    }
+    
+    .tts-menu-item:hover {
+        background: rgba(255, 255, 255, 0.2);
+    }
+}
+
+/* Accessibility - Reduced Motion */
+@media (prefers-reduced-motion: reduce) {
+    .tts-btn,
+    .tts-floating-trigger,
+    .tts-floating-menu,
+    .tts-menu-item,
+    .tts-notification {
+        animation: none !important;
+        transition: none !important;
+    }
+    
+    .tts-btn.speaking {
+        background: #10b981 !important;
+    }
+}
+
+/* Mobile Responsive Styles */
+@media (max-width: 768px) {
+    .tts-floating-btn {
+        bottom: 20px;
+        right: 20px;
+    }
+    
+    .tts-floating-trigger {
+        width: 50px;
+        height: 50px;
+        font-size: 1.3rem;
+    }
+    
+    .tts-floating-menu {
+        min-width: 180px;
+        bottom: 65px;
+    }
+    
+    .tts-menu-item {
+        padding: 10px 14px;
+        font-size: 0.9rem;
+    }
+    
+    /* Header button - hide text on mobile */
+    #headerTTSBtn span:not([aria-hidden]) {
+        display: none;
+    }
+}
+
+/* Dark Theme specific adjustments */
+[data-theme="dark"] .tts-floating-menu {
+    background: #1a1d35;
+    border-color: rgba(99, 102, 241, 0.3);
+}
+
+[data-theme="dark"] .tts-menu-item {
+    color: #f1f5f9;
+}
+
+/* Light Theme specific adjustments */
+[data-theme="light"] .tts-floating-menu {
+    background: #ffffff;
+    border-color: rgba(99, 102, 241, 0.2);
+}
+
+[data-theme="light"] .tts-menu-item {
+    color: #1a1d35;
+}
+
+[data-theme="light"] .tts-menu-item:hover {
+    background: rgba(99, 102, 241, 0.1);
+}
+
+/* Focus styles for keyboard navigation */
+.tts-btn:focus,
+.tts-floating-trigger:focus,
+.tts-menu-item:focus {
+    outline: 3px solid #6366f1;
+    outline-offset: 2px;
+}
+
+/* Screen reader only text */
+.tts-sr-only {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    padding: 0;
+    margin: -1px;
+    overflow: hidden;
+    clip: rect(0, 0, 0, 0);
+    white-space: nowrap;
+    border-width: 0;
+}
+
+/* Loading state for TTS buttons */
+.tts-btn.loading::after {
+    content: '';
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 20px;
+    height: 20px;
+    margin: -10px 0 0 -10px;
+    border: 2px solid rgba(255, 255, 255, 0.3);
+    border-top-color: white;
+    border-radius: 50%;
+    animation: spin 0.8s linear infinite;
+}
+
+@keyframes spin {
+    to {
+        transform: rotate(360deg);
+    }
+}
+
+/* Tooltip for TTS button */
+.tts-btn[title]::before {
+    content: attr(title);
+    position: absolute;
+    bottom: calc(100% + 8px);
+    left: 50%;
+    transform: translateX(-50%);
+    padding: 6px 12px;
+    background: #1a1d35;
+    color: #f1f5f9;
+    border-radius: 6px;
+    font-size: 0.85rem;
+    white-space: nowrap;
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.2s ease;
+    z-index: 10000;
+}
+
+.tts-btn[title]:hover::before {
+    opacity: 1;
+}
+
+/* Selection highlight when reading */
+.tts-reading-selection {
+    background: rgba(99, 102, 241, 0.2);
+    animation: highlight-pulse 2s infinite;
+}
+
+@keyframes highlight-pulse {
+    0%, 100% {
+        background: rgba(99, 102, 241, 0.2);
+    }
+    50% {
+        background: rgba(99, 102, 241, 0.4);
+    }
+}
