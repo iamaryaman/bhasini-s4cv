@@ -9,32 +9,90 @@
         // Export to PDF
         async exportPDF(data, filename) {
             try {
+                // Check if data contains non-Latin text and warn user
+                const dataStr = JSON.stringify(data);
+                const hasUnicode = /[^\u0000-\u007F]/.test(dataStr);
+                
+                if (hasUnicode) {
+                    const userConfirmed = confirm(
+                        'Your resume contains non-English characters.\n\n' +
+                        '⚠️ PDF export has limited Unicode support and may show garbled text.\n\n' +
+                        '✅ For best results with non-English text, use Word export instead.\n\n' +
+                        'Continue with PDF export anyway?'
+                    );
+                    
+                    if (!userConfirmed) {
+                        return false;
+                    }
+                }
+                
                 // Load jsPDF if needed
                 if (!window.jspdf) {
                     await this.loadJsPDF();
                 }
                 
                 const { jsPDF } = window.jspdf;
-                const doc = new jsPDF();
+                const doc = new jsPDF({
+                    compress: true,
+                    unit: 'mm',
+                    format: 'a4'
+                });
                 
                 let y = 20;
                 const pageHeight = 280;
                 
-                // Helper to add text
+                // Helper to detect if text contains non-Latin characters
+                const hasNonLatin = (text) => {
+                    if (!text) return false;
+                    // Check for Unicode characters beyond basic Latin
+                    return /[^\u0000-\u007F]/.test(text);
+                };
+                
+                // Helper to add text with Unicode support
                 const addText = (text, size, bold) => {
+                    if (!text) return;
+                    
                     doc.setFontSize(size);
-                    doc.setFont('helvetica', bold ? 'bold' : 'normal');
                     doc.setTextColor(0, 0, 0);
                     
-                    const lines = doc.splitTextToSize(text, 170);
-                    lines.forEach(line => {
-                        if (y > pageHeight) {
-                            doc.addPage();
-                            y = 20;
+                    // For Unicode text, we need to use a different approach
+                    // jsPDF doesn't support Unicode well, so we'll transliterate or warn
+                    if (hasNonLatin(text)) {
+                        // Try to render as-is, but it might show as boxes/garbage
+                        // The best solution is to use the built-in fonts with encoding
+                        try {
+                            doc.setFont('helvetica', bold ? 'bold' : 'normal');
+                            const lines = doc.splitTextToSize(text, 170);
+                            lines.forEach(line => {
+                                if (y > pageHeight) {
+                                    doc.addPage();
+                                    y = 20;
+                                }
+                                // Use text with UTF-8 encoding option
+                                doc.text(line, 20, y, { encoding: 'UTF-8' });
+                                y += size * 0.4;
+                            });
+                        } catch (err) {
+                            // Fallback: show transliteration note
+                            console.warn('Unicode text may not render correctly in PDF:', text);
+                            doc.setFont('helvetica', bold ? 'bold' : 'normal');
+                            const fallbackText = '[Unicode text - see Word export for proper formatting]';
+                            doc.text(fallbackText, 20, y);
+                            y += size * 0.4;
                         }
-                        doc.text(line, 20, y);
-                        y += size * 0.4;
-                    });
+                    } else {
+                        // Standard Latin text - works fine
+                        doc.setFont('helvetica', bold ? 'bold' : 'normal');
+                        const lines = doc.splitTextToSize(text, 170);
+                        lines.forEach(line => {
+                            if (y > pageHeight) {
+                                doc.addPage();
+                                y = 20;
+                            }
+                            doc.text(line, 20, y);
+                            y += size * 0.4;
+                        });
+                    }
                 };
                 
                 // NAME

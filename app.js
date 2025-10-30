@@ -22,7 +22,7 @@ class VoiceCVApp {
             education: [],
             skills: {}
         };
-        this.currentLanguage = 'hi'; // Default to Hindi for Bhashini
+        this.currentLanguage = 'en'; // Default to English
         this.autoDetectEnabled = false; // ALD toggle state (OFF by default)
         this.user = null;
         this.uploadedDocuments = [];
@@ -1597,7 +1597,20 @@ class VoiceCVApp {
         this.autoDetectEnabled = false; // ALD OFF by default
         this.finalText = '';
         this.generatedCVData = null;
-        this.currentLanguage = 'hi'; // Default to Hindi
+        this.currentLanguage = 'en'; // Default to English
+        
+        // Ensure manual language selector is visible on initialization
+        setTimeout(() => {
+            const manualSelector = document.getElementById('manualLanguageSelector');
+            const manualLanguageSelect = document.getElementById('manualLanguageSelect');
+            if (manualSelector) {
+                manualSelector.style.display = 'block';
+            }
+            if (manualLanguageSelect) {
+                manualLanguageSelect.value = this.currentLanguage;
+            }
+            console.log('✅ Manual language selector initialized and visible');
+        }, 100);
         
         // Initialize audio-related variables
         this.audioStream = null;
@@ -1671,6 +1684,51 @@ class VoiceCVApp {
         
         if (autoDetectToggle) {
             autoDetectToggle.addEventListener('click', () => this.toggleAutoDetect());
+        }
+        
+        // Manual language selector - ONLY changes ASR voice input language
+        const manualLanguageSelect = document.getElementById('manualLanguageSelect');
+        console.log('Setting up language selector, element found:', !!manualLanguageSelect);
+        
+        if (manualLanguageSelect) {
+            // Remove any existing listeners first
+            const newSelect = manualLanguageSelect.cloneNode(true);
+            manualLanguageSelect.parentNode.replaceChild(newSelect, manualLanguageSelect);
+            
+            newSelect.addEventListener('change', (e) => {
+                console.log('Language selector changed to:', e.target.value);
+                
+                // Only change the ASR language, not the UI/page language
+                this.currentLanguage = e.target.value;
+                
+                // Update the language indicator
+                const indicator = document.getElementById('currentLangIndicator');
+                if (indicator && !this.autoDetectEnabled) {
+                    const selectedOption = e.target.options[e.target.selectedIndex];
+                    const langName = selectedOption.text;
+                    indicator.textContent = `${langName}`;
+                    console.log('Updated indicator to:', langName);
+                }
+                
+                // Pre-load Bhashini pipeline for the selected language
+                if (this.bhashiniService) {
+                    this.bhashiniService.getPipelineConfig(this.currentLanguage)
+                        .then(() => {
+                            console.log(`✅ ASR pipeline configured for ${this.currentLanguage}`);
+                        })
+                        .catch(error => {
+                            console.error('❌ Failed to configure ASR pipeline:', error);
+                        });
+                }
+                
+                // Show confirmation that ONLY voice input language changed
+                const selectedText = e.target.options[e.target.selectedIndex].text;
+                this.showStatusMessage(`Voice input language set to ${selectedText}`, 'success');
+            });
+            
+            console.log('✅ Language selector event listener attached');
+        } else {
+            console.error('❌ Could not find manualLanguageSelect element!');
         }
         
         // Add text input mode toggle
@@ -1943,15 +2001,15 @@ class VoiceCVApp {
             html += `<h3 style="color: #2c3e50; margin: 20px 0 10px 0; font-size: 16px; border-bottom: 2px solid #3498db; padding-bottom: 5px;">${contactTitle}</h3>`;
             if (cvData.personalInfo.email) {
                 const emailLabel = (typeof t === 'function') ? t('email') : 'Email';
-                html += `<p style="margin: 8px 0; font-size: 14px;"><strong>${emailLabel}:</strong> ${this.escapeHtml(cvData.personalInfo.email)}</p>`;
+                html += `<p style="color: #000000; margin: 8px 0; font-size: 14px;"><strong>${emailLabel}:</strong> ${this.escapeHtml(cvData.personalInfo.email)}</p>`;
             }
             if (cvData.personalInfo.phone) {
                 const phoneLabel = (typeof t === 'function') ? t('phone') : 'Phone';
-                html += `<p style="margin: 8px 0; font-size: 14px;"><strong>${phoneLabel}:</strong> ${this.escapeHtml(cvData.personalInfo.phone)}</p>`;
+                html += `<p style="color: #000000; margin: 8px 0; font-size: 14px;"><strong>${phoneLabel}:</strong> ${this.escapeHtml(cvData.personalInfo.phone)}</p>`;
             }
             if (cvData.personalInfo.location) {
                 const locationLabel = (typeof t === 'function') ? t('location') : 'Location';
-                html += `<p style="margin: 8px 0; font-size: 14px;"><strong>${locationLabel}:</strong> ${this.escapeHtml(cvData.personalInfo.location)}</p>`;
+                html += `<p style="color: #000000; margin: 8px 0; font-size: 14px;"><strong>${locationLabel}:</strong> ${this.escapeHtml(cvData.personalInfo.location)}</p>`;
             }
         }
         
@@ -1959,7 +2017,7 @@ class VoiceCVApp {
         if (cvData.professionalSummary && cvData.professionalSummary.trim()) {
             const summaryTitle = (typeof t === 'function') ? t('professionalSummary') : 'Professional Summary';
             html += `<h3 style="color: #2c3e50; margin: 20px 0 10px 0; font-size: 16px; border-bottom: 2px solid #3498db; padding-bottom: 5px;">${summaryTitle}</h3>`;
-            html += `<p style="margin: 10px 0; font-size: 14px; line-height: 1.6; text-align: justify;">${this.escapeHtml(cvData.professionalSummary)}</p>`;
+            html += `<p style="color: #000000; margin: 10px 0; font-size: 14px; line-height: 1.6; text-align: justify;">${this.escapeHtml(cvData.professionalSummary)}</p>`;
         }
         
         // Work Experience Section
@@ -2118,6 +2176,7 @@ class VoiceCVApp {
         
         const toggle = document.getElementById('autoDetectToggle');
         const indicator = document.getElementById('currentLangIndicator');
+        const manualSelector = document.getElementById('manualLanguageSelector');
         
         if (toggle) {
             if (this.autoDetectEnabled) {
@@ -2127,6 +2186,11 @@ class VoiceCVApp {
             }
         }
         
+        // Show/hide manual language selector
+        if (manualSelector) {
+            manualSelector.style.display = this.autoDetectEnabled ? 'none' : 'block';
+        }
+        
         if (indicator) {
             if (this.autoDetectEnabled) {
                 indicator.textContent = '🔄 Auto-detect: ON';
@@ -2134,7 +2198,7 @@ class VoiceCVApp {
             } else {
                 const langName = this.aldService.languageNames[this.currentLanguage] || this.currentLanguage;
                 indicator.textContent = `${langName}`;
-                indicator.style.background = '#6366f1'; // Blue
+                indicator.style.background = '#000000'; // Black
             }
         }
         

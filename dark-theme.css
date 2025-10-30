@@ -233,7 +233,7 @@ body::before {
 }
 
 .btn-secondary {
-  background: var(--dark-bg-tertiary);
+  background: #000000;
   color: var(--text-primary);
   border: 1px solid var(--border-primary);
 }
@@ -522,7 +522,7 @@ textarea.form-control {
   height: 64px;
   margin: 0 auto var(--spacing-lg);
   border-radius: var(--radius-lg);
-  background: var(--gradient-accent);
+  background: #63636369;
   display: flex;
   align-items: center;
   justify-content: center;

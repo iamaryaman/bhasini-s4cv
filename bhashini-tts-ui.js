@@ -50,30 +50,8 @@ class BhashiniTTSUI {
      * Add TTS controls to the header navigation
      */
     addHeaderControls() {
-        const headerNav = document.querySelector('.nav-menu');
-        if (!headerNav) {
-            console.warn('Header navigation not found');
-            return;
-        }
-
-        // Create TTS button
-        const ttsButton = document.createElement('button');
-        ttsButton.className = 'btn btn--secondary tts-btn';
-        ttsButton.id = 'headerTTSBtn';
-        ttsButton.innerHTML = `
-            <span aria-hidden="true">🔊</span> 
-            <span data-translate="readPage">Read Page</span>
-        `;
-        ttsButton.setAttribute('aria-label', 'Read page content aloud');
-        ttsButton.title = 'Read current page content using Text-to-Speech';
-
-        // Insert before language button
-        const languageBtn = document.getElementById('languageBtn');
-        if (languageBtn) {
-            headerNav.insertBefore(ttsButton, languageBtn);
-        } else {
-            headerNav.appendChild(ttsButton);
-        }
+        // No longer adding header controls as per user request
+        // TTS controls are only available via floating button
     }
 
     /**
@@ -93,7 +71,7 @@ class BhashiniTTSUI {
                 <button class="tts-menu-item" data-action="read-selection">
                     <span>✂️</span> Read Selection
                 </button>
-                <button class="tts-menu-item" data-action="stop">
+                <button class="tts-menu-item tts-stop-btn" data-action="stop" style="display: none;">
                     <span>⏹️</span> Stop Reading
                 </button>
             </div>
@@ -105,11 +83,7 @@ class BhashiniTTSUI {
      * Setup event listeners for TTS controls
      */
     setupEventListeners() {
-        // Header TTS button
-        const headerTTSBtn = document.getElementById('headerTTSBtn');
-        if (headerTTSBtn) {
-            headerTTSBtn.addEventListener('click', () => this.handleReadPage());
-        }
+        // Header TTS button removed - no longer needed
 
         // Floating TTS button
         const floatingTrigger = document.querySelector('.tts-floating-trigger');
@@ -135,6 +109,11 @@ class BhashiniTTSUI {
         window.addEventListener('tts-screen-change', (e) => {
             console.log('TTS: Active screen changed to', e.detail.screenId);
             this.logCurrentScreen();
+        });
+
+        // Listen for TTS state changes to show/hide stop button
+        window.addEventListener('tts-state-change', (e) => {
+            this.updateStopButtonVisibility(e.detail.isSpeaking);
         });
 
         // Listen for app language changes (from settings)
@@ -262,6 +241,27 @@ class BhashiniTTSUI {
         const menu = document.querySelector('.tts-floating-menu');
         if (menu) {
             menu.classList.toggle('hidden');
+        }
+    }
+
+    /**
+     * Update stop button visibility based on speaking state
+     */
+    updateStopButtonVisibility(isSpeaking) {
+        const stopBtn = document.querySelector('.tts-stop-btn');
+        const floatingTrigger = document.querySelector('.tts-floating-trigger');
+        
+        if (stopBtn) {
+            stopBtn.style.display = isSpeaking ? 'flex' : 'none';
+        }
+        
+        // Update floating trigger appearance when speaking
+        if (floatingTrigger) {
+            if (isSpeaking) {
+                floatingTrigger.classList.add('speaking');
+            } else {
+                floatingTrigger.classList.remove('speaking');
+            }
         }
     }
 

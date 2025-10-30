@@ -9,127 +9,133 @@
     <link rel="stylesheet" href="light-theme.css">
     <link rel="stylesheet" href="bhashini-tts-ui.css">
     <style>
-        /* Override white backgrounds with dark theme */
+        /* Light theme with white background and light-gray shadows */
         body {
-            background: #0a0e27;
-            color: #f1f5f9;
+            background: #ffffff;
+            color: #000000;
         }
         
         .feature-card {
-            background: #1a1d35 !important;
-            border: 1px solid rgba(148, 163, 184, 0.1) !important;
-            color: #f1f5f9 !important;
+            background: #ffffff !important;
+            border: 1px solid #dcdcdc !important;
+            color: #000000 !important;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08) !important;
         }
         
         .feature-card h3 {
-            color: #f1f5f9 !important;
+            color: #000000 !important;
         }
         
         .feature-card p {
-            color: #94a3b8 !important;
+            color: #646464 !important;
         }
         
         .hero-section {
-            background: transparent !important;
+            background: #ffffff !important;
         }
         
         .hero-subtitle {
-            color: #94a3b8 !important;
+            color: #646464 !important;
         }
         
         .accessibility-btn {
-            background: #1a1d35 !important;
-            border: 2px solid rgba(148, 163, 184, 0.1) !important;
-            color: #f1f5f9 !important;
+            background: #ffffff !important;
+            border: 2px solid #dcdcdc !important;
+            color: #000000 !important;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08) !important;
         }
         
         .accessibility-btn:hover {
-            border-color: #6366f1 !important;
-            background: #252849 !important;
+            border-color: #000000 !important;
+            background: #f5f5f5 !important;
         }
         
         .accessibility-btn.selected {
-            border-color: #6366f1 !important;
-            background: linear-gradient(135deg, rgba(99, 102, 241, 0.1) 0%, rgba(139, 92, 246, 0.1) 100%) !important;
+            border-color: #000000 !important;
+            background: #f0f0f0 !important;
         }
         
         .mode-name {
-            color: #f1f5f9 !important;
+            color: #000000 !important;
         }
         
         .mode-desc {
-            color: #94a3b8 !important;
+            color: #646464 !important;
         }
         
         .template-card {
-            background: #1a1d35 !important;
-            border: 2px solid rgba(148, 163, 184, 0.1) !important;
+            background: #ffffff !important;
+            border: 2px solid #dcdcdc !important;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08) !important;
         }
         
         .template-preview {
-            background: #252849 !important;
+            background: #f5f5f5 !important;
         }
         
         .template-mock {
-            background: #1e2139 !important;
+            background: #ffffff !important;
         }
         
         .template-info h3 {
-            color: #f1f5f9 !important;
+            color: #000000 !important;
         }
         
         .template-info p {
-            color: #94a3b8 !important;
+            color: #646464 !important;
         }
         
         .template-features li {
-            color: #94a3b8 !important;
+            color: #646464 !important;
         }
         
         .section-content {
-            background: #1a1d35 !important;
-            border: 1px solid rgba(148, 163, 184, 0.1) !important;
+            background: #ffffff !important;
+            border: 1px solid #dcdcdc !important;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08) !important;
         }
         
         .auth-content {
-            background: #1a1d35;
+            background: #ffffff;
             padding: 2rem;
             border-radius: 12px;
-            border: 1px solid rgba(148, 163, 184, 0.1);
+            border: 1px solid #dcdcdc;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
         }
         
         .auth-tab {
             background: transparent !important;
-            color: #94a3b8 !important;
+            color: #646464 !important;
         }
         
         .auth-tab.active {
-            color: #6366f1 !important;
-            border-bottom-color: #6366f1 !important;
+            color: #000000 !important;
+            border-bottom-color: #000000 !important;
         }
         
         .form-control {
-            background: #1e2139 !important;
-            border: 1px solid rgba(148, 163, 184, 0.1) !important;
-            color: #f1f5f9 !important;
+            background: #ffffff !important;
+            border: 1px solid #dcdcdc !important;
+            color: #000000 !important;
         }
         
         .form-control:focus {
-            border-color: #6366f1 !important;
-            background: #252849 !important;
+            border-color: #000000 !important;
+            background: #ffffff !important;
+            box-shadow: 0 0 0 3px rgba(0, 0, 0, 0.1) !important;
         }
         
         .form-label {
-            color: #94a3b8 !important;
+            color: #646464 !important;
         }
         
         .form-help {
-            color: #64748b !important;
+            color: #888888 !important;
         }
         
         input::placeholder,
         textarea::placeholder {
-            color: #475569 !important;
+            color: #aaaaaa !important;
         }
         
         /* Single Input CV Builder Styles */
@@ -148,7 +154,7 @@
         .toggle-switch {
             width: 48px;
             height: 24px;
-            background: #1e2139;
+            background: #e0e0e0;
             border-radius: 12px;
             position: relative;
             cursor: pointer;
@@ -156,7 +162,7 @@
         }
         
         .toggle-switch.active {
-            background: #6366f1;
+            background: #000000;
         }
         
         .toggle-switch::after {
@@ -176,7 +182,7 @@
         }
         
         .language-indicator-compact {
-            background: #6366f1;
+            background: #000000;
             color: white;
             padding: 0.5rem 1rem;
             border-radius: 12px;
@@ -185,20 +191,20 @@
         }
         
         .record-btn-large {
-            background: linear-gradient(135deg, #6366f1, #8b5cf6);
+            background: #34f5ff1c;
             border: none;
             padding: 2rem 3rem;
             border-radius: 16px;
-            color: white;
+            color: rgb(0, 0, 0);
             cursor: pointer;
             transition: all 0.3s ease;
-            box-shadow: 0 8px 25px rgba(99, 102, 241, 0.3);
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
             width: auto;
         }
         
         .record-btn-large:hover {
             transform: translateY(-2px);
-            box-shadow: 0 12px 35px rgba(99, 102, 241, 0.4);
+            box-shadow: 0 6px 20px rgba(0, 0, 0, 0.2);
         }
         
         .record-btn-large.recording {
@@ -213,21 +219,21 @@
         
         .waveform-visualizer-compact {
             height: 40px;
-            background: #1e2139;
+            background: #f5f5f5;
             border-radius: 8px;
             margin-bottom: 1rem;
-            border: 1px solid rgba(148, 163, 184, 0.1);
+            border: 1px solid #dcdcdc;
         }
         
         .transcription-display {
             min-height: 200px;
-            background: #1e2139;
-            border: 2px solid rgba(148, 163, 184, 0.2);
+            background: #ffffff;
+            border: 2px solid #dcdcdc;
             border-radius: 12px;
             padding: 1.5rem;
             margin-bottom: 2rem;
             position: relative;
-            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
         }
         
         .transcription-text {
@@ -237,17 +243,17 @@
         }
         
         .transcription-partial {
-            color: #94a3b8;
+            color: #888888;
             font-style: italic;
         }
         
         .transcription-final {
-            color: #f1f5f9;
+            color: #000000;
             font-weight: 500;
         }
         
         .action-controls {
-            border-top: 1px solid rgba(148, 163, 184, 0.1);
+            border-top: 1px solid #dcdcdc;
             padding-top: 2rem;
         }
         
@@ -261,111 +267,113 @@
         }
         
         .record-btn {
-            background: linear-gradient(135deg, #0a0e27 0%, #1e2139 100%) !important;
-            border: 3px solid #6366f1 !important;
-            color: #f1f5f9 !important;
+            background: #ffffff !important;
+            border: 3px solid #000000 !important;
+            color: #000000 !important;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08) !important;
         }
         
         .record-btn:hover {
-            background: linear-gradient(135deg, #1e2139 0%, #252849 100%) !important;
+            background: #f5f5f5 !important;
         }
         
         .record-btn.recording {
-            background: linear-gradient(135deg, #ef4444 0%, #dc2626 100%) !important;
+            background: #ef4444 !important;
             border-color: #ef4444 !important;
+            color: #ffffff !important;
         }
         
         .voice-status {
-            color: #94a3b8 !important;
+            color: #646464 !important;
         }
         
         .transcription-area textarea {
-            background: #1e2139 !important;
-            border: 1px solid rgba(148, 163, 184, 0.1) !important;
-            color: #f1f5f9 !important;
+            background: #ffffff !important;
+            border: 1px solid #dcdcdc !important;
+            color: #000000 !important;
         }
         
         .progress-indicator {
-            background: #1a1d35 !important;
-            border: 1px solid rgba(148, 163, 184, 0.1) !important;
+            background: #ffffff !important;
+            border: 1px solid #dcdcdc !important;
         }
         
         .progress-bar {
-            background: #1e2139 !important;
+            background: #f0f0f0 !important;
         }
         
         .progress-bar::after {
-            background: linear-gradient(90deg, #6366f1 0%, #8b5cf6 100%) !important;
+            background: #000000 !important;
         }
         
         .progress-text {
-            color: #f1f5f9 !important;
+            color: #000000 !important;
         }
         
         #stepCounter {
-            color: #94a3b8 !important;
+            color: #646464 !important;
         }
         
         .section-header h2 {
-            color: #f1f5f9 !important;
+            color: #000000 !important;
         }
         
         .section-header p {
-            color: #94a3b8 !important;
+            color: #646464 !important;
         }
         
         .method-btn {
-            background: #1e2139 !important;
-            border: 1px solid rgba(148, 163, 184, 0.1) !important;
-            color: #94a3b8 !important;
+            background: #ffffff !important;
+            border: 1px solid #dcdcdc !important;
+            color: #000000 !important;
         }
         
         .method-btn.active {
-            background: #6366f1 !important;
+            background: #000000 !important;
             color: white !important;
-            border-color: #6366f1 !important;
+            border-color: #000000 !important;
         }
         
         .resume-preview {
-            background: #1a1d35 !important;
-            border: 1px solid rgba(148, 163, 184, 0.1) !important;
+            background: #ffffff !important;
+            border: 1px solid #dcdcdc !important;
         }
         
         .resume-content {
-            background: #1e2139 !important;
-            color: #f1f5f9 !important;
+            background: #ffffff !important;
+            color: #000000 !important;
         }
         
         .resume-section h3 {
-            color: #f1f5f9 !important;
-            border-bottom-color: rgba(148, 163, 184, 0.1) !important;
+            color: #000000 !important;
+            border-bottom-color: #dcdcdc !important;
         }
         
         .review-actions {
-            background: #1a1d35 !important;
-            border: 1px solid rgba(148, 163, 184, 0.1) !important;
+            background: #ffffff !important;
+            border: 1px solid #dcdcdc !important;
         }
         
         .review-actions h3 {
-            color: #f1f5f9 !important;
+            color: #000000 !important;
         }
         
         .modal-content {
-            background: #151935 !important;
-            border: 1px solid rgba(148, 163, 184, 0.1) !important;
+            background: #ffffff !important;
+            border: 1px solid #dcdcdc !important;
         }
         
         .modal-header {
-            border-bottom: 1px solid rgba(148, 163, 184, 0.1) !important;
+            border-bottom: 1px solid #dcdcdc !important;
         }
         
         .modal-header h2 {
-            color: #f1f5f9 !important;
+            color: #000000 !important;
         }
         
         .modal-close {
-            background: #252849 !important;
-            color: #94a3b8 !important;
+            background: #f5f5f5 !important;
+            color: #646464 !important;
             border: none !important;
         }
         
@@ -375,25 +383,25 @@
         }
         
         .settings-section h3 {
-            color: #f1f5f9 !important;
+            color: #000000 !important;
         }
         
         .language-option {
-            color: #f1f5f9 !important;
+            color: #000000 !important;
         }
         
         .language-option:hover {
-            background: rgba(99, 102, 241, 0.1) !important;
+            background: #f5f5f5 !important;
         }
         
         .language-option.selected {
-            background: linear-gradient(135deg, rgba(99, 102, 241, 0.1) 0%, rgba(139, 92, 246, 0.1) 100%) !important;
-            border: 1px solid #6366f1 !important;
+            background: #f0f0f0 !important;
+            border: 1px solid #000000 !important;
         }
         
         .document-item {
-            background: #1e2139 !important;
-            color: #f1f5f9 !important;
+            background: #f5f5f5 !important;
+            color: #000000 !important;
         }
         
         .status-messages {
@@ -401,10 +409,11 @@
         }
         
         .status-message {
-            background: #1a1d35 !important;
-            border: 1px solid rgba(148, 163, 184, 0.1) !important;
-            color: #f1f5f9 !important;
+            background: #ffffff !important;
+            border: 1px solid #dcdcdc !important;
+            color: #000000 !important;
             backdrop-filter: blur(10px);
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
         }
         
         .status-message.success {
@@ -426,16 +435,16 @@
         }
         
         .loading-overlay {
-            background-color: rgba(10, 14, 39, 0.9) !important;
+            background-color: rgba(255, 255, 255, 0.95) !important;
         }
         
         .loading-spinner p {
-            color: #f1f5f9 !important;
+            color: #000000 !important;
         }
         
         .spinner {
-            border: 4px solid #1e2139 !important;
-            border-top-color: #6366f1 !important;
+            border: 4px solid #e0e0e0 !important;
+            border-top-color: #000000 !important;
         }
         
         /* Button Styles */
@@ -444,46 +453,46 @@
         }
         
         .btn--primary {
-            background: linear-gradient(135deg, #6366f1 0%, #8b5cf6 100%) !important;
+            background: #000000 !important;
             color: white !important;
             border: none !important;
         }
         
         .btn--primary:hover {
             transform: translateY(-2px);
-            box-shadow: 0 6px 24px rgba(99, 102, 241, 0.4);
+            box-shadow: 0 4px 16px rgba(0, 0, 0, 0.2);
         }
         
         .btn--secondary {
-            background: #1e2139 !important;
-            color: #f1f5f9 !important;
-            border: 1px solid rgba(148, 163, 184, 0.1) !important;
+            background: #e9ebff !important;
+            color: #000000 !important;
+            border: 1px solid #dcdcdc !important;
         }
         
         .btn--secondary:hover {
-            background: #252849 !important;
-            border-color: #6366f1 !important;
+            background: #f5f5f5 !important;
+            border-color: #000000 !important;
         }
         
         .btn--outline {
             background: transparent !important;
-            color: #f1f5f9 !important;
-            border: 1px solid rgba(148, 163, 184, 0.1) !important;
+            color: #000000 !important;
+            border: 1px solid #dcdcdc !important;
         }
         
         .btn--outline:hover {
-            background: rgba(99, 102, 241, 0.1) !important;
-            border-color: #6366f1 !important;
+            background: #f5f5f5 !important;
+            border-color: #000000 !important;
         }
         
         /* App Header */
         .app-header {
-            background: #151935 !important;
+            background: #e9ebff !important;
             border-bottom: 1px solid rgba(148, 163, 184, 0.1) !important;
         }
         
         h1, h2, h3, h4, h5, h6 {
-            color: #f1f5f9 !important;
+            color: #000000 !important;
         }
         
         p {
@@ -724,45 +733,31 @@
                 <div class="single-voice-content">
                     <div class="text-center mb-4">
                         <h1 id="voice-title" class="text-primary mb-2">🎤 Single Voice Input CV Builder</h1>
-                        <div style="background: linear-gradient(135deg, rgba(239, 68, 68, 0.1), rgba(99, 102, 241, 0.1)); border: 2px solid rgba(99, 102, 241, 0.4); border-radius: 12px; padding: 20px; max-width: 900px; margin: 0 auto 20px;">
-                            <p class="text-primary mb-3" style="font-size: 1.1rem; font-weight: 600;">⚡ ONE RECORDING SESSION - ALL CV INFORMATION</p>
-                            <p class="text-secondary mb-3">No multiple inputs! Just press record and speak continuously about your entire professional background. The AI will extract and organize everything automatically.</p>
-                            
-                            <div style="background: rgba(255, 255, 255, 0.05); border-radius: 8px; padding: 15px; margin: 15px 0;">
-                                <p class="text-primary" style="font-size: 0.95rem; margin-bottom: 12px;"><strong>🗣️ Speak about ALL of these in ONE go:</strong></p>
-                                <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 8px; font-size: 0.85rem; color: var(--text-secondary);">
-                                    <div style="display: flex; align-items: center; gap: 8px;"><span>📝</span> Your full name & contact details</div>
-                                    <div style="display: flex; align-items: center; gap: 8px;"><span>💼</span> All work experience & companies</div>
-                                    <div style="display: flex; align-items: center; gap: 8px;"><span>🎓</span> Complete education history</div>
-                                    <div style="display: flex; align-items: center; gap: 8px;"><span>🔧</span> All technical & soft skills</div>
-                                    <div style="display: flex; align-items: center; gap: 8px;"><span>🌍</span> Languages you speak fluently</div>
-                                    <div style="display: flex; align-items: center; gap: 8px;"><span>📍</span> Location & other details</div>
-                                </div>
-                            </div>
-                            
-                            <div style="background: rgba(16, 185, 129, 0.1); border-left: 4px solid #10b981; padding: 12px 15px; border-radius: 6px;">
-                                <p style="font-size: 0.85rem; margin: 0; color: var(--text-secondary); font-style: italic;">
-                                    🤖 <strong>AI Processing:</strong> The system will automatically parse your speech and organize it into proper CV sections with appropriate headings.
-                                </p>
-                            </div>
-                        </div>
-                    </div>
                     
                     <!-- Language Auto-Detection -->
                     <div class="mb-4" id="languageSection">
-                        <div class="flex items-center justify-center mb-3">
+                        <div class="flex items-center justify-center mb-3" style="flex-direction: column; gap: 1rem;">
                             <div class="auto-detect-toggle mr-4">
                                 <div class="toggle-switch" id="autoDetectToggle"></div>
                                 <label>Auto-detect language</label>
                             </div>
-                            <div class="language-indicator-compact" id="currentLangIndicator">Hindi</div>
-                        </div>
-                        
-                        <!-- Microphone Status -->
-                        <div class="microphone-status" id="microphoneStatus" style="text-align: center; margin-top: 15px;">
-                            <div class="mic-status-indicator" id="micStatusIndicator" style="display: inline-flex; align-items: center; gap: 8px; padding: 8px 16px; border-radius: 20px; background: rgba(156, 163, 175, 0.1); color: #9ca3af; font-size: 0.875rem;">
-                                <span>🎤</span>
-                                <span id="micStatusText">Click record to check microphone</span>
+                            <div class="language-indicator-compact" id="currentLangIndicator">English</div>
+                            
+                            <!-- Manual Language Selector (shown when auto-detect is OFF) -->
+                            <div id="manualLanguageSelector" style="display: block;">
+                                <label for="manualLanguageSelect" style="margin-right: 0.5rem; color: #646464;">Voice Input Language:</label>
+                                <select id="manualLanguageSelect" class="form-control" style="width: 220px; display: inline-block;">
+                                    <option value="en" selected>English</option>
+                                    <option value="hi">Hindi (हिंदी)</option>
+                                    <option value="ta">Tamil (தமிழ்)</option>
+                                    <option value="te">Telugu (తెలుగు)</option>
+                                    <option value="kn">Kannada (ಕನ್ನಡ)</option>
+                                    <option value="ml">Malayalam (മലയാളം)</option>
+                                    <option value="mr">Marathi (मराठी)</option>
+                                    <option value="gu">Gujarati (ગુજરાતી)</option>
+                                    <option value="bn">Bengali (বাংলা)</option>
+                                    <option value="pa">Punjabi (ਪੰਜਾਬੀ)</option>
+                                </select>
                             </div>
                         </div>
                     </div>
@@ -782,7 +777,7 @@
                     <!-- Single Recording Section -->
                     <div class="text-center mb-4">
                         <div style="background: rgba(99, 102, 241, 0.05); border: 2px dashed rgba(99, 102, 241, 0.3); border-radius: 16px; padding: 25px; margin: 20px 0;">
-                            <p style="font-size: 0.9rem; color: var(--text-primary); margin-bottom: 15px; font-weight: 500;">
+                            <p style="font-size: 0.9rem; color: var(--color-slate-900); margin-bottom: 15px; font-weight: 500;">
                                 🔊 <strong>SINGLE SPEECH INPUT:</strong> Speak continuously about your entire professional background
                             </p>
                             <button class="record-btn-large" id="recordBtn" aria-label="Start complete CV recording">
@@ -802,9 +797,9 @@
                             <canvas id="waveformCanvas" width="0" height="0"></canvas>
                         </div>
                         <div class="recording-tips" id="recordingTips" style="display: none;">
-                            <div class="text-secondary" style="font-size: 0.9rem; text-align: center; padding: 20px; background: rgba(239, 68, 68, 0.1); border-radius: 12px; border: 2px solid rgba(239, 68, 68, 0.2);">
+                            <div class="text-secondary" style="font-size: 0.9rem; text-align: center; padding: 20px; background: rgb(255, 253, 253); border-radius: 12px; border: 2px solid rgba(255, 0, 0, 0.2);">
                                 🔴 <strong>RECORDING SINGLE CV SESSION...</strong><br>
-                                <div style="margin-top: 12px; font-size: 0.85rem; line-height: 1.5; color: var(--text-primary);">
+                                <div style="margin-top: 12px; font-size: 0.85rem; line-height: 1.5; color: #000000;">
                                     🔊 <strong>Speak continuously</strong> - don't pause between topics!<br>
                                     📝 Include ALL: name, contact, experience, education, skills, languages<br>
                                     🤖 <em>The AI is listening and will organize everything automatically into proper CV sections</em>
@@ -819,24 +814,24 @@
                     <!-- Large Transcription Display -->
                     <div style="margin: 3rem 0;">
                         <div style="background: linear-gradient(135deg, rgba(99, 102, 241, 0.1) 0%, rgba(139, 92, 246, 0.1) 100%); border: 2px solid rgba(99, 102, 241, 0.3); border-radius: 16px; padding: 2rem; margin: 2rem 0;">
-                            <h1 style="color: #6366f1; margin-bottom: 1.5rem; display: flex; align-items: center; gap: 12px; font-size: 1.8rem; text-align: center; justify-content: center;" data-translate="singleVoiceInputCVBuilder">
+                            <h1 style="color: #212246; margin-bottom: 1.5rem; display: flex; align-items: center; gap: 12px; font-size: 1.8rem; text-align: center; justify-content: center;" data-translate="singleVoiceInputCVBuilder">
                                 <span>🎤</span> Single Complete CV Input
                             </h1>
                             
-                            <div style="background: #1a1d35; border: 3px solid rgba(99, 102, 241, 0.4); border-radius: 12px; min-height: 300px; padding: 2rem; position: relative; box-shadow: 0 8px 25px rgba(99, 102, 241, 0.2);">
+                            <div style="background: #adb6fb00; border: 3px solid rgba(99, 102, 241, 0.4); border-radius: 12px; min-height: 300px; padding: 2rem; position: relative; box-shadow: 0 8px 25px rgba(99, 102, 241, 0.2);">
                                 <div id="transcriptionText" style="font-size: 1.2rem; line-height: 1.8; color: #f1f5f9; min-height: 250px;">
-                                    <span id="finalText" style="color: #f1f5f9; font-weight: 500;"></span>
-                                    <span id="partialText" style="color: #94a3b8; font-style: italic;"></span>
+                                    <span id="finalText" style="color: #000000; font-weight: 500;"></span>
+                                    <span id="partialText" style="color: #1f3046; font-style: italic;"></span>
                                     
-                                        <div style="font-size: 1.4rem; margin-bottom: 2rem; color: #6366f1; font-weight: 600;">
+                                        <div style="font-size: 1.4rem; margin-bottom: 2rem; color: #212246; font-weight: 600;">
                                             🎤 Your speech will appear here in real-time
                                         </div>
                                         
                                         <div style="background: rgba(99, 102, 241, 0.05); border-radius: 12px; padding: 2rem; margin-bottom: 2rem;">
-                                            <div style="font-size: 1.1rem; margin-bottom: 1rem; color: #6366f1; font-weight: 600;">
+                                            <div style="font-size: 1.1rem; margin-bottom: 1rem; color: #212246; font-weight: 600;">
                                                 🗣️ Example of complete CV speech:
                                             </div>
-                                            <div style="font-size: 1rem; line-height: 1.7; color: #94a3b8; font-style: normal;">
+                                            <div style="font-size: 1rem; line-height: 1.7; color: #000000; font-style: normal;">
                                                 "My name is John Smith, email john.smith@gmail.com, phone +1-555-123-4567. I live in New York, USA. I currently work as a Senior Software Engineer at TechCorp for 4 years. Before that, I was a Junior Developer at StartupXYZ for 2 years. I have full-stack development experience. I completed my Bachelor of Computer Science from MIT in 2015. My skills include JavaScript, Python, React, Node.js, MongoDB. I'm fluent in English and Spanish."
                                             </div>
                                         </div>
@@ -896,7 +891,7 @@
                     <div class="resume-preview" id="resumePreview" style="display: none;">
                         <div style="border-top: 2px solid var(--accent-primary); padding-top: 2rem; margin-top: 2rem;">
                         <h2 class="text-primary mb-3 text-center" data-translate="resumePreview">📄 Resume Preview</h2>
-                            <div class="preview-content" id="previewContent" style="background: var(--dark-bg-tertiary); border: 1px solid var(--border-primary); border-radius: var(--radius-md); padding: 2rem; max-height: 400px; overflow-y: auto;">
+                            <div class="preview-content" id="previewContent" style="color: #000000; background: #e9ebff; border: 1px solid var(--border-primary); border-radius: var(--radius-md); padding: 2rem; max-height: 400px; overflow-y: auto;">
                                 <!-- Preview content will be populated here -->
                             </div>
                             <div class="text-center mt-3">
@@ -912,7 +907,7 @@
                                 <!-- Document Upload Section -->
                                 <div style="margin-top: 2rem; padding: 1.5rem; background: rgba(99, 102, 241, 0.05); border-radius: 12px; border: 2px dashed rgba(99, 102, 241, 0.3);">
                                     <h3 style="color: #000203; margin-bottom: 1rem; font-size: 1.1rem;" data-translate="additionalDocuments">📎 Additional Documents</h3>
-                                    <p style="color: var(--text-secondary); margin-bottom: 1rem; font-size: 0.9rem;" data-translate="uploadDocumentsHint">
+                                    <p style="color: #000000; margin-bottom: 1rem; font-size: 0.9rem;" data-translate="uploadDocumentsHint">
                                         Upload supporting documents like recommendations, marksheets, certificates to attach to your CV export
                                     </p>
                                     <input type="file" id="additionalDocsUpload" class="sr-only" multiple 
@@ -1091,35 +1086,35 @@
                             <span class="language-name">English</span>
                         </div>
                         <div class="language-option" data-lang="ta">
-                            <span class="language-flag" aria-hidden="true">🇮🇳</span>
+                            <span class="language-flag" aria-hidden="true">Ta</span>
                             <span class="language-name">Tamil</span>
                         </div>
                         <div class="language-option" data-lang="te">
-                            <span class="language-flag" aria-hidden="true">🇮🇳</span>
+                            <span class="language-flag" aria-hidden="true">Te</span>
                             <span class="language-name">Telugu</span>
                         </div>
                         <div class="language-option" data-lang="kn">
-                            <span class="language-flag" aria-hidden="true">🇮🇳</span>
+                            <span class="language-flag" aria-hidden="true">Ka</span>
                             <span class="language-name">Kannada</span>
                         </div>
                         <div class="language-option" data-lang="ml">
-                            <span class="language-flag" aria-hidden="true">🇮🇳</span>
+                            <span class="language-flag" aria-hidden="true">Ml</span>
                             <span class="language-name">Malayalam</span>
                         </div>
                         <div class="language-option" data-lang="mr">
-                            <span class="language-flag" aria-hidden="true">🇮🇳</span>
+                            <span class="language-flag" aria-hidden="true">Ma</span>
                             <span class="language-name">Marathi</span>
                         </div>
                         <div class="language-option" data-lang="gu">
-                            <span class="language-flag" aria-hidden="true">🇮🇳</span>
+                            <span class="language-flag" aria-hidden="true">Gj</span>
                             <span class="language-name">Gujarati</span>
                         </div>
                         <div class="language-option" data-lang="bn">
-                            <span class="language-flag" aria-hidden="true">🇮🇳</span>
+                            <span class="language-flag" aria-hidden="true">Be</span>
                             <span class="language-name">Bengali</span>
                         </div>
                         <div class="language-option" data-lang="pa">
-                            <span class="language-flag" aria-hidden="true">🇮🇳</span>
+                            <span class="language-flag" aria-hidden="true">Pu</span>
                             <span class="language-name">Punjabi</span>
                         </div>
                     </div>

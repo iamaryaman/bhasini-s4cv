@@ -173,8 +173,8 @@ class OllamaUIIntegration {
             </div>
 
             <!-- Optimized Summary -->
-            <div style="background: #1a1d35; border-radius: 12px; padding: 1.5rem; margin-bottom: 1.5rem;">
-                <h3 style="color: #f1f5f9; margin-bottom: 1rem; display: flex; align-items: center; gap: 8px;">
+            <div style="background: #ffffff; border-radius: 12px; padding: 1.5rem; margin-bottom: 1.5rem;">
+                <h3 style="color: #000000ff; margin-bottom: 1rem; display: flex; align-items: center; gap: 8px;">
                     <span>📝</span> Optimized Summary
                 </h3>
                 <p style="color: #94a3b8; line-height: 1.6;">${optimizedContent.optimizedSummary || 'No changes suggested'}</p>
@@ -182,13 +182,13 @@ class OllamaUIIntegration {
 
             <!-- Suggestions -->
             ${optimizedContent.suggestions && optimizedContent.suggestions.length > 0 ? `
-                <div style="background: #1a1d35; border-radius: 12px; padding: 1.5rem; margin-bottom: 1.5rem;">
-                    <h3 style="color: #f1f5f9; margin-bottom: 1rem; display: flex; align-items: center; gap: 8px;">
+                <div style="background: #ffffff; border-radius: 12px; padding: 1.5rem; margin-bottom: 1.5rem;">
+                    <h3 style="color: #000000ff; margin-bottom: 1rem; display: flex; align-items: center; gap: 8px;">
                         <span>💡</span> AI Suggestions
                     </h3>
                     <ul style="list-style: none; padding: 0; margin: 0;">
                         ${optimizedContent.suggestions.map(suggestion => `
-                            <li style="padding: 0.75rem; margin-bottom: 0.5rem; background: rgba(99, 102, 241, 0.1); border-left: 3px solid #6366f1; border-radius: 6px; color: #94a3b8;">
+                            <li style="padding: 0.75rem; margin-bottom: 0.5rem; background: rgba(99, 101, 241, 0); border-left: 3px solid #6366f1; border-radius: 6px; color: #000000ff;">
                                 ${suggestion}
                             </li>
                         `).join('')}
@@ -198,13 +198,13 @@ class OllamaUIIntegration {
 
             <!-- Optimized Skills -->
             ${optimizedContent.optimizedSkills && optimizedContent.optimizedSkills.length > 0 ? `
-                <div style="background: #1a1d35; border-radius: 12px; padding: 1.5rem; margin-bottom: 1.5rem;">
-                    <h3 style="color: #f1f5f9; margin-bottom: 1rem; display: flex; align-items: center; gap: 8px;">
+                <div style="background: #ffffff; border-radius: 12px; padding: 1.5rem; margin-bottom: 1.5rem;">
+                    <h3 style="color: #000000ff; margin-bottom: 1rem; display: flex; align-items: center; gap: 8px;">
                         <span>🔧</span> Optimized Skills
                     </h3>
                     <div style="display: flex; flex-wrap: wrap; gap: 8px;">
                         ${optimizedContent.optimizedSkills.map(skill => `
-                            <span style="padding: 0.5rem 1rem; background: rgba(99, 102, 241, 0.2); color: #6366f1; border-radius: 20px; font-size: 0.9rem;">
+                            <span style="padding: 0.5rem 1rem; background: rgba(0, 0, 0, 0); color: #090909ff; border-radius: 20px; font-size: 0.9rem;">
                                 ${skill}
                             </span>
                         `).join('')}
