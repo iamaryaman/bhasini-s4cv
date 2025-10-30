@@ -1330,10 +1330,11 @@ class VoiceCVApp {
             
             // Generate filename with timestamp
             const timestamp = new Date().toISOString().slice(0, 10);
-            const filename = `resume_${timestamp}.${format === 'pdf' ? 'pdf' : 'docx'}`;
+            const langSuffix = this.currentResumeLanguage !== 'en' ? `_${this.currentResumeLanguage}` : '';
+            const filename = `resume${langSuffix}_${timestamp}.${format === 'pdf' ? 'pdf' : 'docx'}`;
             
-            // Use the generated CV data from single input or resumeData as fallback
-            const dataToExport = this.generatedCVData || this.resumeData;
+            // Use translated data if available, otherwise use original
+            const dataToExport = this.translatedCVData || this.generatedCVData || this.resumeData;
             
             if (!dataToExport) {
                 throw new Error('No resume data available for export. Please generate your CV first.');
@@ -1594,9 +1595,12 @@ class VoiceCVApp {
         // Initialize Bhashini service for audio transcription
         this.bhashiniService = new BhashiniService();
         this.aldService = new BhashiniALDService(); // Initialize ALD service
+        this.translationService = new BhashiniTranslationService(); // Initialize translation service
         this.autoDetectEnabled = false; // ALD OFF by default
         this.finalText = '';
         this.generatedCVData = null;
+        this.translatedCVData = null; // Store translated resume
+        this.currentResumeLanguage = 'en'; // Language of the resume (default English)
         this.currentLanguage = 'en'; // Default to English
         
         // Ensure manual language selector is visible on initialization
@@ -1675,6 +1679,18 @@ class VoiceCVApp {
             copyBtn.addEventListener('click', (e) => {
                 e.preventDefault();
                 this.copySingleInputText();
+            });
+        }
+        
+        // Resume language translation buttons
+        const resumeLangButtons = document.querySelectorAll('.resume-lang-btn');
+        if (resumeLangButtons.length > 0) {
+            resumeLangButtons.forEach(button => {
+                button.addEventListener('click', async (e) => {
+                    e.preventDefault();
+                    const targetLang = button.getAttribute('data-lang');
+                    await this.translateResume(targetLang);
+                });
             });
         }
         
@@ -2094,6 +2110,163 @@ class VoiceCVApp {
         return `Extracted: ${extracted.join(', ')}`;
     }
     
+    async translateResume(targetLang) {
+        if (!this.translationService) {
+            this.showStatusMessage('Translation service not initialized', 'error');
+            return;
+        }
+        
+        const originalData = this.generatedCVData;
+        if (!originalData) {
+            this.showStatusMessage('No resume to translate. Please generate your CV first.', 'error');
+            return;
+        }
+        
+        // If already in target language, no need to translate
+        if (this.currentResumeLanguage === targetLang) {
+            this.showStatusMessage(`Resume is already in ${targetLang}`, 'info');
+            return;
+        }
+        
+        try {
+            // Update button states
+            const buttons = document.querySelectorAll('.resume-lang-btn');
+            buttons.forEach(btn => {
+                btn.style.borderColor = '#dcdcdc';
+                btn.style.background = '#ffffff';
+                btn.style.fontWeight = 'normal';
+            });
+            const selectedBtn = document.querySelector(`.resume-lang-btn[data-lang="${targetLang}"]`);
+            if (selectedBtn) {
+                selectedBtn.style.borderColor = '#000';
+                selectedBtn.style.background = '#f0f0f0';
+                selectedBtn.style.fontWeight = '600';
+            }
+            
+            // Show translation status
+            const statusEl = document.getElementById('translationStatus');
+            if (statusEl) {
+                statusEl.innerHTML = '🔄 Translating resume...';
+                statusEl.style.color = '#3b82f6';
+            }
+            
+            this.showLoadingOverlay(true);
+            
+            const sourceLang = this.currentResumeLanguage;
+            console.log(`Translating resume from ${sourceLang} to ${targetLang}`);
+            
+            // Create a deep copy to translate
+            const translatedData = JSON.parse(JSON.stringify(originalData));
+            
+            // Translate personal info
+            if (translatedData.personalInfo) {
+                if (translatedData.personalInfo.fullName) {
+                    translatedData.personalInfo.fullName = await this.translationService.translate(
+                        translatedData.personalInfo.fullName, sourceLang, targetLang
+                    );
+                }
+                if (translatedData.personalInfo.location) {
+                    translatedData.personalInfo.location = await this.translationService.translate(
+                        translatedData.personalInfo.location, sourceLang, targetLang
+                    );
+                }
+            }
+            
+            // Translate professional summary
+            if (translatedData.professionalSummary) {
+                translatedData.professionalSummary = await this.translationService.translate(
+                    translatedData.professionalSummary, sourceLang, targetLang
+                );
+            }
+            
+            // Translate work experience
+            if (translatedData.workExperience && translatedData.workExperience.length > 0) {
+                for (let job of translatedData.workExperience) {
+                    if (job.jobTitle) {
+                        job.jobTitle = await this.translationService.translate(job.jobTitle, sourceLang, targetLang);
+                    }
+                    if (job.company) {
+                        job.company = await this.translationService.translate(job.company, sourceLang, targetLang);
+                    }
+                    if (job.description) {
+                        job.description = await this.translationService.translate(job.description, sourceLang, targetLang);
+                    }
+                }
+            }
+            
+            // Translate education
+            if (translatedData.education && translatedData.education.length > 0) {
+                for (let edu of translatedData.education) {
+                    if (edu.degree) {
+                        edu.degree = await this.translationService.translate(edu.degree, sourceLang, targetLang);
+                    }
+                    if (edu.institution) {
+                        edu.institution = await this.translationService.translate(edu.institution, sourceLang, targetLang);
+                    }
+                }
+            }
+            
+            // Translate skills
+            if (translatedData.skills?.technical && translatedData.skills.technical.length > 0) {
+                const translatedSkills = [];
+                for (let skill of translatedData.skills.technical) {
+                    const translated = await this.translationService.translate(skill, sourceLang, targetLang);
+                    translatedSkills.push(translated);
+                }
+                translatedData.skills.technical = translatedSkills;
+            }
+            
+            // Translate languages (language names)
+            if (translatedData.languages && translatedData.languages.length > 0) {
+                for (let lang of translatedData.languages) {
+                    if (lang.name) {
+                        lang.name = await this.translationService.translate(lang.name, sourceLang, targetLang);
+                    }
+                    if (lang.proficiency) {
+                        lang.proficiency = await this.translationService.translate(lang.proficiency, sourceLang, targetLang);
+                    }
+                }
+            }
+            
+            // Store translated data
+            this.translatedCVData = translatedData;
+            this.currentResumeLanguage = targetLang;
+            
+            // Update preview with translated content
+            const previewHTML = this.generatePreviewHTML(translatedData);
+            const previewContent = document.getElementById('previewContent');
+            if (previewContent) {
+                previewContent.innerHTML = previewHTML;
+            }
+            
+            this.showLoadingOverlay(false);
+            
+            if (statusEl) {
+                const langNames = {
+                    'en': 'English', 'hi': 'Hindi', 'ta': 'Tamil', 'te': 'Telugu',
+                    'kn': 'Kannada', 'ml': 'Malayalam', 'mr': 'Marathi',
+                    'gu': 'Gujarati', 'bn': 'Bengali', 'pa': 'Punjabi'
+                };
+                statusEl.innerHTML = `✅ Resume translated to ${langNames[targetLang] || targetLang}`;
+                statusEl.style.color = '#10b981';
+            }
+            
+            this.showStatusMessage(`✅ Resume translated to ${targetLang}`, 'success');
+            
+        } catch (error) {
+            console.error('Translation error:', error);
+            this.showLoadingOverlay(false);
+            
+            const statusEl = document.getElementById('translationStatus');
+            if (statusEl) {
+                statusEl.innerHTML = '❌ Translation failed';
+                statusEl.style.color = '#ef4444';
+            }
+            
+            this.showStatusMessage('Failed to translate resume: ' + error.message, 'error');
+        }
+    }
+    
     clearSingleInputTranscription() {
         this.finalText = '';
         const finalTextEl = document.getElementById('finalText');
@@ -2115,6 +2288,8 @@ class VoiceCVApp {
         }
         
         this.generatedCVData = null;
+        this.translatedCVData = null;
+        this.currentResumeLanguage = 'en';
         this.showStatusMessage('Starting fresh - ready for new CV recording!', 'info');
     }
     

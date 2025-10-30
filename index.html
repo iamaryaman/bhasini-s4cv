@@ -921,6 +921,50 @@
                     <div class="resume-preview" id="resumePreview" style="display: none;">
                         <div style="border-top: 2px solid var(--accent-primary); padding-top: 2rem; margin-top: 2rem;">
                         <h2 class="text-primary mb-3 text-center" data-translate="resumePreview">📄 Resume Preview</h2>
+                        
+                        <!-- Resume Language Selector -->
+                        <div style="background: rgba(99, 102, 241, 0.1); border: 2px solid rgba(99, 102, 241, 0.3); border-radius: 12px; padding: 1.5rem; margin-bottom: 1.5rem;">
+                            <div style="display: flex; align-items: center; justify-content: center; gap: 1rem; flex-wrap: wrap;">
+                                <label style="font-weight: 600; color: #212246; font-size: 1rem;">
+                                    🌍 Translate Resume To:
+                                </label>
+                                <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(120px, 1fr)); gap: 0.5rem; max-width: 700px;">
+                                    <button class="resume-lang-btn" data-lang="en" style="padding: 0.5rem 1rem; border: 2px solid #000; border-radius: 8px; background: #f0f0f0; cursor: pointer; font-size: 0.85rem; font-weight: 600; transition: all 0.3s;">
+                                        English
+                                    </button>
+                                    <button class="resume-lang-btn" data-lang="hi" style="padding: 0.5rem 1rem; border: 2px solid #dcdcdc; border-radius: 8px; background: #ffffff; cursor: pointer; font-size: 0.85rem; transition: all 0.3s;">
+                                        हिंदी
+                                    </button>
+                                    <button class="resume-lang-btn" data-lang="ta" style="padding: 0.5rem 1rem; border: 2px solid #dcdcdc; border-radius: 8px; background: #ffffff; cursor: pointer; font-size: 0.85rem; transition: all 0.3s;">
+                                        தமிழ்
+                                    </button>
+                                    <button class="resume-lang-btn" data-lang="te" style="padding: 0.5rem 1rem; border: 2px solid #dcdcdc; border-radius: 8px; background: #ffffff; cursor: pointer; font-size: 0.85rem; transition: all 0.3s;">
+                                        తెలుగు
+                                    </button>
+                                    <button class="resume-lang-btn" data-lang="kn" style="padding: 0.5rem 1rem; border: 2px solid #dcdcdc; border-radius: 8px; background: #ffffff; cursor: pointer; font-size: 0.85rem; transition: all 0.3s;">
+                                        ಕನ್ನಡ
+                                    </button>
+                                    <button class="resume-lang-btn" data-lang="ml" style="padding: 0.5rem 1rem; border: 2px solid #dcdcdc; border-radius: 8px; background: #ffffff; cursor: pointer; font-size: 0.85rem; transition: all 0.3s;">
+                                        മലയാളം
+                                    </button>
+                                    <button class="resume-lang-btn" data-lang="mr" style="padding: 0.5rem 1rem; border: 2px solid #dcdcdc; border-radius: 8px; background: #ffffff; cursor: pointer; font-size: 0.85rem; transition: all 0.3s;">
+                                        मराठी
+                                    </button>
+                                    <button class="resume-lang-btn" data-lang="gu" style="padding: 0.5rem 1rem; border: 2px solid #dcdcdc; border-radius: 8px; background: #ffffff; cursor: pointer; font-size: 0.85rem; transition: all 0.3s;">
+                                        ગુજરાતી
+                                    </button>
+                                    <button class="resume-lang-btn" data-lang="bn" style="padding: 0.5rem 1rem; border: 2px solid #dcdcdc; border-radius: 8px; background: #ffffff; cursor: pointer; font-size: 0.85rem; transition: all 0.3s;">
+                                        বাংলা
+                                    </button>
+                                    <button class="resume-lang-btn" data-lang="pa" style="padding: 0.5rem 1rem; border: 2px solid #dcdcdc; border-radius: 8px; background: #ffffff; cursor: pointer; font-size: 0.85rem; transition: all 0.3s;">
+                                        ਪੰਜਾਬੀ
+                                    </button>
+                                </div>
+                            </div>
+                            <div id="translationStatus" style="text-align: center; margin-top: 1rem; font-size: 0.9rem; color: #646464;">
+                                <!-- Translation status will appear here -->
+                            </div>
+                        </div>
                             <div class="preview-content" id="previewContent" style="color: #000000; background: #e9ebff; border: 1px solid var(--border-primary); border-radius: var(--radius-md); padding: 2rem; max-height: 400px; overflow-y: auto;">
                                 <!-- Preview content will be populated here -->
                             </div>
